@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c1022">
+  <meta name="description" content="A scroll-through portfolio by Ashu Newatia, a developer and competitive programmer at IIT Indore.">
+  <title>Ashu Newatia / Twilight Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500&family=Spectral:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="./malwa-observatory.webp">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <a class="signature" href="#arrival">Ashu Newatia<span aria-hidden="true">.</span></a>
+    <nav aria-label="Portfolio chapters">
+      <a href="#arrival" aria-current="location">Home</a>
+      <a href="#campusflow">Work</a>
+      <a href="#about">About</a>
+      <a href="#dawn">Contact</a>
+    </nav>
+    <label class="sky-control">
+      <span class="sky-icon" aria-hidden="true">◐</span>
+      <select id="sky-time" aria-label="Time of day">
+        <option value="night">夜 · Night</option>
+        <option value="twilight" selected>カタワレ時 · Magic hour</option>
+        <option value="morning">朝 · Morning</option>
+      </select>
+    </label>
+  </header>
+  <div class="landscape" aria-hidden="true">
+    <div class="plate observatory-plate"></div>
+    <div class="sky-grade sky-twilight"></div>
+    <div class="sky-grade sky-night"></div>
+    <div class="sky-grade sky-morning"></div>
+    <div class="sunbeams"></div>
+    <canvas class="sky-stars"></canvas>
+    <svg class="red-thread" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="ribbon-color" gradientUnits="userSpaceOnUse" x1="0" y1="560" x2="1000" y2="300">
+          <stop stop-color="#912b43" />
+          <stop offset=".44" stop-color="#e44458" />
+          <stop offset=".76" stop-color="#ee635c" />
+          <stop offset="1" stop-color="#f9926c" />
+        </linearGradient>
+        <path id="musubi-path" pathLength="1" d="M -55 567 C 107 601 225 530 389 555 S 594 565 665 484 C 725 414 816 469 861 421 S 925 356 1055 379" />
+        <g id="musubi-knot">
+          <path class="knot-under" d="M -16 2 C -6 6 6 -13 12 -6 S 0 12 -7 4 S -13 -10 -6 -7 S 8 6 16 1" />
+          <path class="knot-over" d="M -16 2 C -6 6 6 -13 12 -6 S 0 12 -7 4 S -13 -10 -6 -7 S 8 6 16 1" />
+          <path class="knot-under" d="M -3 5 Q 0 2 4 -2" />
+          <path class="knot-over" d="M -3 5 Q 0 2 4 -2" />
+        </g>
+      </defs>
+      <use class="thread-shadow" href="#musubi-path" />
+      <use class="thread-fiber" href="#musubi-path" />
+      <path class="thread-weave thread-weave-light" pathLength="1" />
+      <path class="thread-weave thread-weave-dark" pathLength="1" />
+      <use class="thread-node" data-scene="campusflow" href="#musubi-knot" />
+      <use class="thread-node" data-scene="instibus" href="#musubi-knot" />
+      <use class="thread-node" data-scene="campus-olx" href="#musubi-knot" />
+      <use class="thread-node" data-scene="campus-assistant" href="#musubi-knot" />
+      <use class="thread-node" data-scene="triage" href="#musubi-knot" />
+      <use class="thread-node" data-scene="about" href="#musubi-knot" />
+      <use class="thread-node" data-scene="dawn" href="#musubi-knot" />
+    </svg>
+    <div class="landscape-shade"></div>
+    <div class="film-grain"></div>
+  </div>
+  <div class="chapter-wipe" aria-hidden="true"><span></span><span></span></div>
+  <main id="main" tabindex="-1">
+    <section class="scene hero" id="arrival" aria-labelledby="title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy hero-copy">
+          <p class="eyebrow"><span class="memory-subtitle" lang="ja">誰そ彼</span><span class="hairline"></span> IIT Indore</p>
+          <h1 id="title">Ashu <br>Newatia<span>.</span></h1>
+          <p class="lede">Developer and competitive programmer.</p>
+          <p class="hero-profile">I build full-stack apps for campus life and solve algorithmic problems in C++.</p>
+        </div>
+        <div class="crater-rim" aria-hidden="true"></div>
+        <p class="scroll-cue"><span aria-hidden="true"></span> Scroll to follow the twilight</p>
+        <span class="vertical-title" lang="ja" aria-hidden="true">黄昏の空</span>
+      </div>
+      <aside class="soundtrack" aria-label="Portfolio soundtrack">
+        <p class="soundtrack-label"><strong>Sparkle</strong><span>RADWIMPS · Movie version</span></p>
+        <iframe title="Play Sparkle (movie version) by RADWIMPS"
+          src="https://www.youtube-nocookie.com/embed/-J9FuvPmMoI?playsinline=1&amp;rel=0&amp;loop=1&amp;playlist=-J9FuvPmMoI"
+          width="244" height="200" allow="encrypted-media; picture-in-picture; fullscreen"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        <a href="https://www.youtube.com/watch?v=-J9FuvPmMoI" target="_blank" rel="noopener">Open on YouTube</a>
+      </aside>
+    </section>
+    <section class="scene project" id="campusflow" aria-labelledby="campusflow-title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy">
+          <p class="eyebrow">IITISoC ’26 <span class="hairline"></span> 3rd place · Software Development</p>
+          <h2 id="campusflow-title">CampusFlow<span>.</span></h2>
+          <p class="lede">A collaborative workspace connected to GitHub.</p>
+          <p class="description">We shipped a real-time Kanban workspace with bidirectional GitHub issue sync. Teams can organize tasks on the board and see repository updates in the same workspace.</p>
+          <p class="tech"><b class="tech-cool">MERN</b> <span>·</span> Socket.IO <span>·</span> Octokit</p>
+          <p class="project-links"><a href="https://github.com/AshuNewatia/SoC">Source <span aria-hidden="true">↗</span></a><a href="#flow-demo">Sync demo</a></p>
+          <details class="project-diary">
+            <summary><span lang="ja">日記</span> GitHub and the board</summary>
+            <div class="diary-paper">
+              <p class="diary-location">IIT Indore</p>
+              <p>Octokit handles outgoing GitHub updates. Inbound webhooks reconcile repository changes with board state, while Socket.IO keeps the workspace in sync.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="scene-art project-panel" id="flow-demo" tabindex="-1">
+          <figcaption>GitHub issue sync · Simulation</figcaption>
+          <div class="sync-row"><span>GitHub issue</span><strong>Fix issue import</strong></div>
+          <div class="sync-row"><span>CampusFlow board</span><strong id="flow-state" role="status">Waiting for update</strong></div>
+          <button type="button" class="small-button" id="flow-sync">Simulate issue update</button>
+        </figure>
+      </div>
+    </section>
+    <section class="scene project transit" id="instibus" aria-labelledby="instibus-title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy">
+          <p class="eyebrow">Selected work <span class="hairline"></span> Full-stack</p>
+          <h2 id="instibus-title">InstiBus<span>.</span></h2>
+          <p class="lede">A campus bus system for IIT Indore.</p>
+          <p class="description">Our four-person DBMS project handled dated schedules, bookings, waitlists and trip requests. PostgreSQL transactions kept competing bookings from claiming the same last seat, and Razorpay powered test-mode checkout.</p>
+          <p class="tech"><b class="tech-warm">Next.js</b> <span>·</span> <b class="tech-cool">PostgreSQL</b> <span>·</span> Razorpay</p>
+          <p class="project-links"><a href="https://github.com/AshuNewatia/Instibus">Source (access required) <span aria-hidden="true">↗</span></a><a href="#booking-demo">Booking demo</a></p>
+          <details class="project-diary">
+            <summary><span lang="ja">日記</span> Last-seat concurrency</summary>
+            <div class="diary-paper">
+              <p class="diary-location">IIT Indore</p>
+              <p>PostgreSQL handles the seat allocation inside a transaction. Razorpay test checkout and waitlist handling sit around the booking flow.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="scene-art booking-demo" id="booking-demo" tabindex="-1" aria-labelledby="booking-caption">
+          <div class="demo-header"><span>Booking simulation</span><strong class="seat-count">0 seats left</strong></div>
+          <div class="booking-lanes">
+            <div class="booking-row"><span class="passenger">Passenger A</span><span class="request-track" aria-hidden="true"><i></i></span><strong class="booking-winner">Ticket issued</strong></div>
+            <div class="booking-row"><span class="passenger">Passenger B</span><span class="request-track" aria-hidden="true"><i></i></span><strong class="booking-wait">Waitlisted</strong></div>
+          </div>
+          <figcaption id="booking-caption">Two requests. One seat.</figcaption>
+          <button class="small-button" id="simulate-booking" type="button">Simulate concurrent booking</button>
+        </figure>
+      </div>
+    </section>
+    <section class="scene project market" id="campus-olx" aria-labelledby="olx-title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy">
+          <p class="eyebrow">Selected work <span class="hairline"></span> In development</p>
+          <h2 id="olx-title">Campus OLX<span>.</span></h2>
+          <p class="lede">A marketplace for the campus community.</p>
+          <p class="description">I’m developing it with seniors so students can buy and sell within IIT Indore, close to the people they’re trading with.</p>
+          <p class="tech">Web development <span>·</span> Marketplace</p>
+          <p class="project-links"><a href="#olx-demo">Sample listings</a></p>
+          <details class="project-diary">
+            <summary><span lang="ja">日記</span> Campus marketplace</summary>
+            <div class="diary-paper">
+              <p class="diary-location">IIT Indore</p>
+              <p>This project is in development. The sample listings illustrate the buy-and-sell experience for students on campus.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="scene-art project-panel" id="olx-demo" tabindex="-1">
+          <figcaption>Sample campus listings</figcaption>
+          <div class="sync-row"><span>Engineering Graphics Kit</span><strong>₹350</strong></div>
+          <div class="sync-row"><span>Hero Sprint Cycle</span><strong>₹3,200</strong></div>
+          <div class="sync-row"><span>Calculus Textbook</span><strong>₹200</strong></div>
+        </figure>
+      </div>
+    </section>
+    <section class="scene project voice" id="campus-assistant" aria-labelledby="assistant-title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy">
+          <p class="eyebrow">Selected work <span class="hairline"></span> Voice AI</p>
+          <h2 id="assistant-title">Campus <br>Assistant<span>.</span></h2>
+          <p class="lede">A real-time voice assistant for IIT Indore.</p>
+          <p class="description">We adapted a LiveKit voice agent for campus questions, reworking its interface, voice commands, and responses for an institute audience.</p>
+          <p class="tech"><b class="tech-warm">LiveKit Agents</b> <span>·</span> <b class="tech-cool">Node.js</b></p>
+          <p class="project-links"><a href="https://github.com/AshuNewatia/Live-Voice-Agent">Source <span aria-hidden="true">↗</span></a><a href="https://live-voice-agent.vercel.app">Live demo (original voice agent) <span aria-hidden="true">↗</span></a><a href="#voice-demo">Sample prompt</a></p>
+          <details class="project-diary">
+            <summary><span lang="ja">日記</span> From speech to response</summary>
+            <div class="diary-paper">
+              <p class="diary-location">IIT Indore</p>
+              <p>LiveKit carries real-time audio. The campus version adapts the interface, commands, and responses for IIT Indore questions.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="scene-art signal project-panel" id="voice-demo" tabindex="-1" aria-labelledby="signal-caption">
+          <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <figcaption id="signal-caption">Real-time voice</figcaption>
+          <button class="small-button" type="button" id="sample-prompt" aria-expanded="false" aria-controls="voice-transcript">Sample prompt</button>
+          <div id="voice-transcript" hidden><p><strong>Student:</strong> When is the next bus to Simrol?</p><p><strong>Assistant:</strong> Where are you departing from? I can help you check the schedule.</p></div>
+        </figure>
+      </div>
+    </section>
+    <section class="scene project triage" id="triage" aria-labelledby="triage-title">
+      <div class="scene-inner">
+        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
+        <div class="copy">
+          <p class="eyebrow">Selected work <span class="hairline"></span> Systems</p>
+          <h2 id="triage-title">Triage Queue <br>Simulation<span>.</span></h2>
+          <p class="lede">Comparing priority queues and aging policies in C++.</p>
+          <p class="description">As the team’s architect, I defined the shared interface and integrated the simulator. We compared indexed and lazy heaps against an unsorted-array reference and logged simulated patient wait times.</p>
+          <p class="tech"><b class="tech-cool">C++</b> <span>·</span> Indexed heap <span>·</span> Lazy heap</p>
+          <p class="project-links"><a href="https://github.com/AshuNewatia/OmniCoders_DSA_Project">Source <span aria-hidden="true">↗</span></a><a href="#aging-demo">Queue demo</a></p>
+          <details class="project-diary">
+            <summary><span lang="ja">日記</span> Queue design</summary>
+            <div class="diary-paper">
+              <p class="diary-location">IIT Indore</p>
+              <p>The shared C++ interface lets the simulator compare an indexed heap and a lazy heap against the same unsorted-array reference.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="scene-art aging-demo" id="aging-demo" tabindex="-1" aria-labelledby="heap-caption">
+          <div class="demo-header"><span>Simulated wait</span><strong class="elapsed-wait">40 min</strong></div>
+          <div class="heap-tree" aria-hidden="true">
+            <div class="heap-edges"></div>
+            <div class="heap-node patient-a">A</div>
+            <div class="heap-node patient-b">B</div>
+            <div class="heap-node patient-c">C</div>
+          </div>
+          <figcaption id="heap-caption">Aging raises patient B’s priority.</figcaption>
+          <button class="small-button" id="step-aging" type="button">Step +10 min</button>
+        </figure>
+      </div>
+    </section>
+    <section class="scene about" id="about" aria-labelledby="about-title">
+      <div class="scene-inner">
+        <div class="copy">
+          <p class="eyebrow"><span class="memory-subtitle" lang="ja">カタワレ時</span><span class="hairline"></span> About · IIT Indore</p>
+          <h2 id="about-title">Beyond <br>the repo<span>.</span></h2>
+          <p class="description">I’m a B.Tech student at IIT Indore. Alongside my software projects, I help teach web fundamentals through campus workshops.</p>
+        </div>
+        <dl class="credentials">
+          <div><dt>GDG IIT Indore</dt><dd>Web Development Domain Lead</dd></div>
+          <div><dt>CSESA</dt><dd>Coordinator</dd></div>
+          <div><dt><a href="https://codeforces.com/profile/Ashu23">Codeforces</a></dt><dd>Expert <span>·</span> 1630 peak rating</dd></div>
+          <div><dt>Diffusion models</dt><dd>Research collaboration with PhD seniors</dd></div>
+          <div><dt>SRMC</dt><dd>Stage 2 <span>·</span> AIR 76</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="scene finale" id="dawn" aria-labelledby="contact-title">
+      <div class="scene-inner">
+        <div class="stairway stairway-left" aria-hidden="true"></div>
+        <div class="stairway stairway-right" aria-hidden="true"></div>
+        <div class="copy finale-copy">
+          <p class="eyebrow"><span class="memory-subtitle" lang="ja">朝</span><span class="hairline"></span> Contact</p>
+          <h2 id="contact-title">Let’s connect<span>.</span></h2>
+          <svg class="ink-signature" viewBox="0 0 180 22" aria-hidden="true" focusable="false">
+            <path d="M3 18C28 8 52 5 82 7s40 9 27 11S85 4 126 3c16 0 30 0 50 4"/>
+          </svg>
+          <p class="lede">Browse my code or get in touch about a project.</p>
+          <div class="contact-links">
+            <a href="https://github.com/AshuNewatia">GitHub</a>
+            <a href="https://www.linkedin.com/in/ashunewatia23/">LinkedIn</a>
+            <a href="https://codeforces.com/profile/Ashu23">Codeforces</a>
+            <a class="resume-link" href="./Ashu-Newatia-Resume.pdf" download>Résumé PDF</a>
+            <button class="small-button" type="button" id="copy-email">Copy email</button>
+          </div>
+          <a class="contact-link" href="mailto:cse250001011@iiti.ac.in">cse250001011@iiti.ac.in</a>
+          <p id="copy-status" class="copy-status" role="status"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
