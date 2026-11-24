@@ -1,276 +1,2407 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0c1022">
-  <meta name="description" content="A scroll-through portfolio by Ashu Newatia, a developer and competitive programmer at IIT Indore.">
-  <title>Ashu Newatia / Twilight Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500&family=Spectral:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="./malwa-observatory.webp">
-  <link rel="stylesheet" href="./style.css">
-  <script defer src="./app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Ashu Newatia | Infinity Castle Portfolio</title>
+  <meta name="description" content="Interactive 3D Infinity Castle (Mugenjo) portfolio of Ashu Newatia — Computer Science Undergrad at IIT Indore, Full-Stack & Systems Developer." />
+  <meta name="theme-color" content="#080404" />
+
+  <!-- OpenGraph / Social Link Previews -->
+  <meta property="og:title" content="Ashu Newatia | Infinity Castle Portfolio" />
+  <meta property="og:description" content="Descend through an infinite 3D Mugenjo shaft to explore full-stack systems, low-latency AI voice agents, and algorithmic engines." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ashu Newatia | Infinity Castle Portfolio" />
+  <meta name="twitter:description" content="Interactive 3D Infinity Castle portfolio — Full-Stack & Systems Developer @ IIT Indore." />
+
+  <!-- Inline SVG Crimson Hanko Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23080404'/%3E%3Crect x='5' y='5' width='54' height='54' rx='5' fill='%233d080c' stroke='%23c21d24' stroke-width='4'/%3E%3Crect x='11' y='11' width='42' height='42' rx='2' fill='none' stroke='%23ffaa44' stroke-width='1.5' stroke-opacity='0.65'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-weight='bold' font-size='25' fill='%23ffd584' text-anchor='middle' letter-spacing='1'%3EAN%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-void: #080404;
+      --cedar-deep: #140a06;
+      --cedar-warm: #27130a;
+      --amber: #ffaa44;
+      --amber-bright: #ffd584;
+      --amber-glow: rgba(255, 164, 58, 0.42);
+      --crimson: #c21d24;
+      --crimson-dark: #7a0e14;
+      --crimson-glow: rgba(194, 29, 36, 0.5);
+      --parchment: #f6ecd7;
+      --parchment-muted: rgba(246, 236, 215, 0.78);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--amber-bright);
+      outline-offset: 3px;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg-void);
+      color: var(--parchment);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    #castle-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: block;
+    }
+
+    #cursor-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 60;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* ==========================================
+       FULL-SCREEN SLIDING SHOJI GATE PRELOADER
+       ========================================== */
+    #shoji-preloader {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      z-index: 100;
+      display: flex;
+      overflow: hidden;
+      cursor: pointer;
+      background: transparent;
+      transition: visibility 0s linear 1.35s;
+    }
+
+    #shoji-preloader.opened {
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .gate-leaf {
+      position: relative;
+      width: 50%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(90deg, #160a05 0px, #160a05 7px, transparent 7px, transparent 96px),
+        repeating-linear-gradient(0deg, #160a05 0px, #160a05 7px, transparent 7px, transparent 118px),
+        radial-gradient(circle at 50% 45%, rgba(255, 204, 118, 0.24), rgba(145, 58, 16, 0.26) 46%, rgba(16, 8, 5, 0.98) 88%),
+        linear-gradient(180deg, #211008 0%, #140905 60%, #0c0503 100%);
+      border-top: 10px solid #120804;
+      border-bottom: 10px solid #120804;
+      box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.85);
+      transition: transform 1.25s cubic-bezier(0.76, 0, 0.24, 1);
+      will-change: transform;
+    }
+
+    .gate-leaf.left {
+      border-right: 4px solid #d48d3b;
+      transform: translateX(0);
+    }
+
+    .gate-leaf.right {
+      border-left: 4px solid #d48d3b;
+      transform: translateX(0);
+    }
+
+    .gate-leaf::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 26px;
+      height: 52px;
+      transform: translateY(-50%);
+      background: radial-gradient(circle at center, #080403 55%, #2b140a 100%);
+      border: 2px solid var(--amber);
+      border-radius: 16px;
+      box-shadow: 0 0 14px rgba(255, 170, 68, 0.35);
+    }
+
+    .gate-leaf.left::after { right: 22px; }
+    .gate-leaf.right::after { left: 22px; }
+
+    .gate-seam-glow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, var(--amber-bright) 35%, #fff5d6 50%, var(--amber-bright) 65%, transparent);
+      box-shadow: 0 0 28px 6px rgba(255, 170, 68, 0.75);
+      z-index: 2;
+      opacity: 0.9;
+      transition: opacity 0.45s ease, transform 0.65s ease;
+    }
+
+    .preloader-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      width: min(86vw, 340px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1.65rem 1.8rem;
+      background: rgba(12, 6, 4, 0.92);
+      border: 1px solid rgba(255, 170, 68, 0.55);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.92), 0 0 38px rgba(194, 29, 36, 0.32);
+      border-radius: 4px;
+      text-align: center;
+      transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .preloader-seal {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--crimson);
+      background: rgba(122, 14, 20, 0.42);
+      box-shadow: 0 0 26px var(--crimson-glow), inset 0 0 14px rgba(194, 29, 36, 0.45);
+      display: grid;
+      place-items: center;
+      font-family: 'Cinzel', serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--amber-bright);
+      letter-spacing: 0.08em;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .preloader-seal::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px solid rgba(255, 170, 68, 0.5);
+    }
+
+    .preloader-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--parchment);
+    }
+
+    .preloader-bar-wrap {
+      width: 100%;
+      max-width: 210px;
+      height: 3px;
+      background: rgba(255, 170, 68, 0.16);
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .preloader-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--crimson), var(--amber-bright));
+      box-shadow: 0 0 12px var(--amber);
+      transition: width 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .preloader-hint {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      color: var(--amber);
+      opacity: 0.9;
+    }
+
+    #shoji-preloader.opened .gate-leaf.left { transform: translateX(-103%); }
+    #shoji-preloader.opened .gate-leaf.right { transform: translateX(103%); }
+    #shoji-preloader.opened .gate-seam-glow { opacity: 0; transform: translateX(-50%) scaleX(8); }
+    #shoji-preloader.opened .preloader-center { opacity: 0; transform: translate(-50%, -50%) scale(0.86); }
+
+    /* Warm Atmospheric Vignette */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 36%, rgba(8, 3, 3, 0.72) 78%, rgba(4, 2, 2, 0.95) 100%);
+    }
+
+    /* Nakime Biwa Warp Ripple Overlay */
+    #biwa-flash {
+      position: fixed;
+      inset: 0;
+      z-index: 25;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at center, rgba(255, 210, 125, 0.38), rgba(194, 29, 36, 0.36) 52%, rgba(8, 4, 4, 0.92) 100%);
+      transition: opacity 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #biwa-flash.active {
+      opacity: 1;
+      transition: opacity 0.06s ease-out;
+    }
+
+    /* Top HUD */
+    .hud-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: max(0.95rem, env(safe-area-inset-top)) 1.75rem 0.75rem;
+      pointer-events: none;
+    }
+
+    .monogram {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--parchment);
+    }
+
+    .hanko-seal {
+      width: 42px;
+      height: 42px;
+      border: 2px solid var(--crimson);
+      background: rgba(122, 14, 20, 0.35);
+      box-shadow: 0 0 20px var(--crimson-glow), inset 0 0 12px rgba(194, 29, 36, 0.4);
+      display: grid;
+      place-items: center;
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      color: var(--amber-bright);
+      position: relative;
+      border-radius: 3px;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .hanko-seal::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(255, 170, 68, 0.45);
+      pointer-events: none;
+    }
+
+    .monogram:hover .hanko-seal {
+      transform: scale(1.06);
+      box-shadow: 0 0 28px rgba(255, 170, 68, 0.55);
+    }
+
+    .monogram-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.08rem;
+    }
+
+    .monogram-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--parchment);
+    }
+
+    .monogram-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: var(--amber);
+      opacity: 0.85;
+    }
+
+    .hud-controls {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .hud-pill {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      color: var(--amber-bright);
+      background: rgba(16, 8, 6, 0.85);
+      border: 1px solid rgba(255, 170, 68, 0.38);
+      padding: 0.44rem 0.78rem;
+      border-radius: 3px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .hud-btn {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      color: var(--parchment);
+      transition: all 0.22s ease;
+    }
+
+    .hud-btn:hover {
+      border-color: var(--amber);
+      color: var(--amber-bright);
+      box-shadow: 0 0 18px var(--amber-glow);
+      transform: translateY(-1px);
+    }
+
+    .hud-btn.biwa-btn {
+      border-color: rgba(194, 29, 36, 0.7);
+      background: rgba(52, 10, 12, 0.82);
+    }
+
+    .hud-btn.biwa-btn:hover {
+      border-color: var(--crimson);
+      box-shadow: 0 0 22px var(--crimson-glow);
+    }
+
+    /* Right Edge Chamber Navigation (Desktop/Tablet) */
+    .chamber-nav {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.65rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--parchment-muted);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: color 0.25s ease;
+    }
+
+    .nav-item .nav-text {
+      opacity: 0.55;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .nav-item:hover .nav-text,
+    .nav-item.active .nav-text {
+      opacity: 1;
+      color: var(--amber-bright);
+      transform: translateX(-4px);
+    }
+
+    .nav-diamond {
+      width: 11px;
+      height: 11px;
+      border: 1.5px solid rgba(255, 170, 68, 0.55);
+      background: rgba(10, 5, 4, 0.92);
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .nav-diamond {
+      background: var(--amber);
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 14px var(--amber), 0 0 26px var(--crimson-glow);
+      transform: rotate(45deg) scale(1.22);
+    }
+
+    /* Floating Ornate Shoji Panels */
+    #panels-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      perspective: 1400px;
+    }
+
+    .shoji-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(88vw, 880px);
+      max-height: calc(100dvh - 165px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      background:
+        linear-gradient(155deg, rgba(28, 14, 9, 0.87), rgba(11, 6, 5, 0.9)),
+        repeating-linear-gradient(90deg, rgba(255, 170, 68, 0.03) 0px, rgba(255, 170, 68, 0.03) 1px, transparent 1px, transparent 48px),
+        repeating-linear-gradient(0deg, rgba(255, 170, 68, 0.03) 0px, rgba(255, 170, 68, 0.03) 1px, transparent 1px, transparent 48px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 170, 68, 0.36);
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.88),
+        0 0 40px rgba(255, 140, 40, 0.08),
+        inset 0 0 45px rgba(255, 157, 59, 0.07);
+      padding: 2.3rem 2.6rem;
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      scrollbar-width: thin;
+      scrollbar-color: var(--amber) transparent;
+    }
+
+    .shoji-panel::before,
+    .shoji-panel::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--amber);
+      border-style: solid;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px var(--amber-glow));
+    }
+
+    .shoji-panel::before {
+      top: 10px;
+      left: 10px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .shoji-panel::after {
+      bottom: 10px;
+      right: 10px;
+      border-width: 0 2px 2px 0;
+    }
+
+    .level-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.7rem;
+    }
+
+    .level-tag::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--crimson), var(--amber));
+    }
+
+    h1, h2, h3 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* Level 01: Hero */
+    .hero-title {
+      font-size: clamp(2.1rem, 5vw, 3.8rem);
+      line-height: 1.08;
+      background: linear-gradient(180deg, #fff5df 0%, #f5d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9));
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 2vw, 1.2rem);
+      font-weight: 600;
+      color: var(--amber);
+      margin-bottom: 1rem;
+    }
+
+    .hero-desc {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      line-height: 1.7;
+      color: var(--parchment-muted);
+      max-width: 630px;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-dark));
+      color: var(--parchment);
+      border: 1px solid rgba(255, 170, 68, 0.55);
+      padding: 0.78rem 1.45rem;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      box-shadow: 0 6px 26px var(--crimson-glow);
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(255, 170, 68, 0.45);
+      border-color: var(--amber-bright);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 170, 68, 0.08);
+      color: var(--amber-bright);
+      border: 1px solid rgba(255, 170, 68, 0.42);
+      padding: 0.76rem 1.25rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.25s ease;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 170, 68, 0.18);
+      border-color: var(--amber);
+      box-shadow: 0 0 18px var(--amber-glow);
+      transform: translateY(-1px);
+    }
+
+    .scroll-cue {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: var(--parchment-muted);
+      margin-left: auto;
+    }
+
+    .scroll-arrow {
+      display: inline-block;
+      color: var(--amber);
+      animation: floatDown 1.6s infinite ease-in-out;
+    }
+
+    @keyframes floatDown {
+      0%, 100% { transform: translateY(-3px); opacity: 0.45; }
+      50% { transform: translateY(4px); opacity: 1; }
+    }
+
+    /* Level 02: Chambers & Wooden Ema Plaques */
+    .section-heading {
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      margin-bottom: 0.8rem;
+      color: var(--parchment);
+    }
+
+    .about-bio {
+      font-size: clamp(0.88rem, 1.4vw, 0.96rem);
+      line-height: 1.7;
+      color: var(--parchment-muted);
+      margin-bottom: 1.35rem;
+    }
+
+    .about-bio strong {
+      color: var(--amber-bright);
+      font-weight: 600;
+    }
+
+    .ema-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .ema-plaque {
+      background: linear-gradient(180deg, rgba(44, 21, 11, 0.86), rgba(20, 10, 6, 0.94));
+      border: 1px solid rgba(255, 170, 68, 0.3);
+      border-top: 3px solid var(--amber);
+      padding: 0.95rem 1rem;
+      border-radius: 3px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .ema-plaque:hover {
+      transform: translateY(-3px);
+      border-color: var(--amber-bright);
+      box-shadow: 0 10px 26px rgba(255, 164, 58, 0.22);
+    }
+
+    .ema-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-bright);
+      margin-bottom: 0.5rem;
+    }
+
+    .ema-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.34rem;
+    }
+
+    .ema-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.46rem;
+      background: rgba(8, 4, 4, 0.75);
+      border: 1px solid rgba(255, 195, 115, 0.2);
+      color: var(--parchment);
+      border-radius: 2px;
+    }
+
+    /* Level 03: Forged Works (Lantern Cards) */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.95rem;
+      margin-top: 0.35rem;
+    }
+
+    .lantern-card {
+      background: linear-gradient(160deg, rgba(28, 14, 8, 0.84), rgba(14, 7, 5, 0.92));
+      border: 1px solid rgba(255, 170, 68, 0.25);
+      padding: 1.15rem 1.2rem;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lantern-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 110px;
+      height: 110px;
+      background: radial-gradient(circle, rgba(255, 170, 68, 0.18), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .lantern-card:hover {
+      background: linear-gradient(160deg, rgba(46, 22, 11, 0.94), rgba(20, 10, 6, 0.95));
+      border-color: var(--amber);
+      box-shadow: 0 0 30px rgba(255, 164, 58, 0.3), inset 0 0 24px rgba(255, 164, 58, 0.08);
+      transform: translateY(-3px);
+    }
+
+    .lantern-card:hover::before { opacity: 1; }
+
+    .project-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--crimson);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.22rem;
+      font-weight: 700;
+    }
+
+    .project-title {
+      font-size: 1.04rem;
+      color: var(--parchment);
+      margin-bottom: 0.4rem;
+      transition: color 0.25s ease;
+    }
+
+    .lantern-card:hover .project-title { color: var(--amber-bright); }
+
+    .project-desc {
+      font-size: 0.84rem;
+      line-height: 1.54;
+      color: var(--parchment-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .project-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.95rem;
+    }
+
+    .project-link {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--amber);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .project-link:hover {
+      color: var(--amber-bright);
+      border-bottom-color: var(--amber-bright);
+    }
+
+    /* Level 04: Abyssal Gate */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 0.9rem;
+      margin: 1.35rem 0;
+    }
+
+    .gate-link {
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+      padding: 1.05rem 1.15rem;
+      background: linear-gradient(160deg, rgba(32, 16, 9, 0.88), rgba(14, 7, 5, 0.92));
+      border: 1px solid rgba(255, 170, 68, 0.32);
+      text-decoration: none;
+      color: var(--parchment);
+      border-radius: 3px;
+      transition: all 0.25s ease;
+    }
+
+    .gate-link:hover {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 24px var(--amber-glow);
+      transform: translateY(-2px);
+    }
+
+    .gate-platform {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    .gate-handle {
+      font-size: 0.92rem;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .loop-notice {
+      margin-top: 1.1rem;
+      padding-top: 0.95rem;
+      border-top: 1px dashed rgba(255, 170, 68, 0.3);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.09em;
+      color: var(--amber-bright);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    /* ==========================================
+       BOTTOM-RIGHT LOOPING THEME PLAYER
+       ========================================== */
+    .castle-player {
+      position: fixed;
+      right: max(1.25rem, env(safe-area-inset-right));
+      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0.85rem 0.55rem 0.6rem;
+      border-radius: 999px;
+      background: linear-gradient(155deg, rgba(28, 14, 9, 0.9), rgba(11, 6, 5, 0.94));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 170, 68, 0.42);
+      color: var(--parchment);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.78), 0 0 20px rgba(255, 164, 58, 0.14);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .castle-player:hover,
+    .castle-player.playing {
+      border-color: var(--amber-bright);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.82), 0 0 24px var(--amber-glow);
+    }
+
+    .castle-toggle-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 170, 68, 0.55);
+      border-radius: 50%;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-dark));
+      color: var(--amber-bright);
+      font-size: 0.82rem;
+      display: grid;
+      place-items: center;
+      transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .castle-toggle-btn:hover {
+      transform: scale(1.06);
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 14px var(--amber-glow);
+    }
+
+    .castle-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.22;
+      padding-right: 0.15rem;
+    }
+
+    .castle-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--parchment);
+    }
+
+    .castle-status {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--amber);
+    }
+
+    .castle-eq {
+      display: flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 14px;
+    }
+
+    .castle-eq span {
+      width: 3px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--amber-bright);
+      opacity: 0.65;
+      transition: height 0.2s ease, opacity 0.2s ease;
+    }
+
+    .castle-player.playing .castle-eq span {
+      opacity: 1;
+      animation: castleBounce 0.8s infinite ease-in-out;
+    }
+
+    .castle-player.playing .castle-eq span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .castle-player.playing .castle-eq span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes castleBounce {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+
+    /* ==========================================
+       RESPONSIVE BREAKPOINTS (ALL DEVICES)
+       ========================================== */
+    @media (max-width: 1024px) {
+      #gravity-meter { display: none; }
+      .shoji-panel { width: min(86vw, 760px); padding: 2rem 2.1rem; }
+      .chamber-nav { right: 1rem; }
+      .nav-text { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hud-top { padding: max(0.75rem, env(safe-area-inset-top)) 1rem 0.6rem; }
+      .monogram-text { display: none; }
+      .hanko-seal { width: 38px; height: 38px; font-size: 0.92rem; }
+      .hud-pill { padding: 0.4rem 0.6rem; font-size: 0.68rem; }
+      .biwa-btn span:last-child,
+      #audio-label { display: none; }
+
+      /* Bottom Floating Chamber Dock on Mobile */
+      .chamber-nav {
+        top: auto;
+        right: auto;
+        left: 50%;
+        bottom: max(0.85rem, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        flex-direction: row;
+        gap: 1.25rem;
+        background: rgba(14, 7, 5, 0.88);
+        border: 1px solid rgba(255, 170, 68, 0.35);
+        padding: 0.55rem 1.25rem;
+        border-radius: 999px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Keep music player cleanly above the mobile chamber dock */
+      .castle-player {
+        right: max(0.85rem, env(safe-area-inset-right));
+        bottom: calc(max(0.85rem, env(safe-area-inset-bottom)) + 3.4rem);
+        padding: 0.45rem 0.7rem 0.45rem 0.5rem;
+        gap: 0.55rem;
+      }
+
+      .castle-toggle-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.74rem;
+      }
+
+      .shoji-panel {
+        width: 92vw;
+        max-height: calc(100dvh - 185px);
+        padding: 1.45rem 1.25rem;
+      }
+
+      .projects-grid { grid-template-columns: 1fr; }
+      .scroll-cue { margin-left: 0; width: 100%; margin-top: 0.25rem; }
+    }
+
+    @media (max-width: 480px) {
+      #depth-meter { display: none; }
+      .castle-status { display: none; }
+      .hero-actions { gap: 0.65rem; }
+      .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+      .ema-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-height: 640px) {
+      .shoji-panel { max-height: calc(100dvh - 135px); padding: 1.35rem 1.65rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-arrow { animation: none; }
+      .gate-leaf { transition-duration: 0.35s; }
+      .castle-player.playing .castle-eq span { animation: none; height: 9px; }
+    }
+  </style>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="masthead">
-    <a class="signature" href="#arrival">Ashu Newatia<span aria-hidden="true">.</span></a>
-    <nav aria-label="Portfolio chapters">
-      <a href="#arrival" aria-current="location">Home</a>
-      <a href="#campusflow">Work</a>
-      <a href="#about">About</a>
-      <a href="#dawn">Contact</a>
-    </nav>
-    <label class="sky-control">
-      <span class="sky-icon" aria-hidden="true">◐</span>
-      <select id="sky-time" aria-label="Time of day">
-        <option value="night">夜 · Night</option>
-        <option value="twilight" selected>カタワレ時 · Magic hour</option>
-        <option value="morning">朝 · Morning</option>
-      </select>
-    </label>
-  </header>
-  <div class="landscape" aria-hidden="true">
-    <div class="plate observatory-plate"></div>
-    <div class="sky-grade sky-twilight"></div>
-    <div class="sky-grade sky-night"></div>
-    <div class="sky-grade sky-morning"></div>
-    <div class="sunbeams"></div>
-    <canvas class="sky-stars"></canvas>
-    <svg class="red-thread" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id="ribbon-color" gradientUnits="userSpaceOnUse" x1="0" y1="560" x2="1000" y2="300">
-          <stop stop-color="#912b43" />
-          <stop offset=".44" stop-color="#e44458" />
-          <stop offset=".76" stop-color="#ee635c" />
-          <stop offset="1" stop-color="#f9926c" />
-        </linearGradient>
-        <path id="musubi-path" pathLength="1" d="M -55 567 C 107 601 225 530 389 555 S 594 565 665 484 C 725 414 816 469 861 421 S 925 356 1055 379" />
-        <g id="musubi-knot">
-          <path class="knot-under" d="M -16 2 C -6 6 6 -13 12 -6 S 0 12 -7 4 S -13 -10 -6 -7 S 8 6 16 1" />
-          <path class="knot-over" d="M -16 2 C -6 6 6 -13 12 -6 S 0 12 -7 4 S -13 -10 -6 -7 S 8 6 16 1" />
-          <path class="knot-under" d="M -3 5 Q 0 2 4 -2" />
-          <path class="knot-over" d="M -3 5 Q 0 2 4 -2" />
-        </g>
-      </defs>
-      <use class="thread-shadow" href="#musubi-path" />
-      <use class="thread-fiber" href="#musubi-path" />
-      <path class="thread-weave thread-weave-light" pathLength="1" />
-      <path class="thread-weave thread-weave-dark" pathLength="1" />
-      <use class="thread-node" data-scene="campusflow" href="#musubi-knot" />
-      <use class="thread-node" data-scene="instibus" href="#musubi-knot" />
-      <use class="thread-node" data-scene="campus-olx" href="#musubi-knot" />
-      <use class="thread-node" data-scene="campus-assistant" href="#musubi-knot" />
-      <use class="thread-node" data-scene="triage" href="#musubi-knot" />
-      <use class="thread-node" data-scene="about" href="#musubi-knot" />
-      <use class="thread-node" data-scene="dawn" href="#musubi-knot" />
-    </svg>
-    <div class="landscape-shade"></div>
-    <div class="film-grain"></div>
+
+  <!-- Full-Screen Sliding Shoji Gate Preloader -->
+  <div id="shoji-preloader" title="Click to open gates &amp; enable Biwa sound">
+    <div class="gate-leaf left"></div>
+    <div class="gate-leaf right"></div>
+    <div class="gate-seam-glow"></div>
+    <div class="preloader-center">
+      <div class="preloader-seal">AN</div>
+      <div class="preloader-title">Mugenjo</div>
+      <div class="preloader-bar-wrap">
+        <div class="preloader-bar" id="preloader-bar"></div>
+      </div>
+      <div class="preloader-hint" id="preloader-hint">SUMMONING CHAMBERS... CLICK TO ENTER</div>
+    </div>
   </div>
-  <div class="chapter-wipe" aria-hidden="true"><span></span><span></span></div>
-  <main id="main" tabindex="-1">
-    <section class="scene hero" id="arrival" aria-labelledby="title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy hero-copy">
-          <p class="eyebrow"><span class="memory-subtitle" lang="ja">誰そ彼</span><span class="hairline"></span> IIT Indore</p>
-          <h1 id="title">Ashu <br>Newatia<span>.</span></h1>
-          <p class="lede">Developer and competitive programmer.</p>
-          <p class="hero-profile">I build full-stack apps for campus life and solve algorithmic problems in C++.</p>
-        </div>
-        <div class="crater-rim" aria-hidden="true"></div>
-        <p class="scroll-cue"><span aria-hidden="true"></span> Scroll to follow the twilight</p>
-        <span class="vertical-title" lang="ja" aria-hidden="true">黄昏の空</span>
+
+  <!-- 3D Infinity Castle Canvas -->
+  <canvas id="castle-canvas"></canvas>
+
+  <!-- Glowing Biwa-String Cursor Trail Canvas -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <div class="vignette"></div>
+  <div id="biwa-flash"></div>
+
+  <!-- Minimal HUD -->
+  <header class="hud-top">
+    <a class="monogram" onclick="warpToSection(0)" title="Return to Entrance">
+      <div class="hanko-seal">AN</div>
+      <div class="monogram-text">
+        <span class="monogram-title">Ashu Newatia</span>
+        <span class="monogram-sub">MUGENJO // INFINITY CASTLE</span>
       </div>
-      <aside class="soundtrack" aria-label="Portfolio soundtrack">
-        <p class="soundtrack-label"><strong>Sparkle</strong><span>RADWIMPS · Movie version</span></p>
-        <iframe title="Play Sparkle (movie version) by RADWIMPS"
-          src="https://www.youtube-nocookie.com/embed/-J9FuvPmMoI?playsinline=1&amp;rel=0&amp;loop=1&amp;playlist=-J9FuvPmMoI"
-          width="244" height="200" allow="encrypted-media; picture-in-picture; fullscreen"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-        <a href="https://www.youtube.com/watch?v=-J9FuvPmMoI" target="_blank" rel="noopener">Open on YouTube</a>
-      </aside>
-    </section>
-    <section class="scene project" id="campusflow" aria-labelledby="campusflow-title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy">
-          <p class="eyebrow">IITISoC ’26 <span class="hairline"></span> 3rd place · Software Development</p>
-          <h2 id="campusflow-title">CampusFlow<span>.</span></h2>
-          <p class="lede">A collaborative workspace connected to GitHub.</p>
-          <p class="description">We shipped a real-time Kanban workspace with bidirectional GitHub issue sync. Teams can organize tasks on the board and see repository updates in the same workspace.</p>
-          <p class="tech"><b class="tech-cool">MERN</b> <span>·</span> Socket.IO <span>·</span> Octokit</p>
-          <p class="project-links"><a href="https://github.com/AshuNewatia/SoC">Source <span aria-hidden="true">↗</span></a><a href="#flow-demo">Sync demo</a></p>
-          <details class="project-diary">
-            <summary><span lang="ja">日記</span> GitHub and the board</summary>
-            <div class="diary-paper">
-              <p class="diary-location">IIT Indore</p>
-              <p>Octokit handles outgoing GitHub updates. Inbound webhooks reconcile repository changes with board state, while Socket.IO keeps the workspace in sync.</p>
-            </div>
-          </details>
+    </a>
+
+    <div class="hud-controls">
+      <div class="hud-pill" id="depth-meter">DEPTH: -0,000m</div>
+      <div class="hud-pill" id="gravity-meter">GRAVITY: 0°</div>
+      <!-- Drop resume.pdf in the same folder or swap href with your Google Drive PDF link -->
+      <a class="hud-pill hud-btn" href="./resume.pdf" target="_blank" rel="noopener" title="View Resume PDF">
+        <span>📄</span>
+        <span>RESUME ↗</span>
+      </a>
+      <button class="hud-pill hud-btn biwa-btn" id="biwa-shift-btn" type="button" title="Pluck Biwa &amp; Rotate Castle 90° (Space)">
+        <span>🪕</span>
+        <span>ROTATE 90°</span>
+      </button>
+      <button class="hud-pill hud-btn" id="audio-toggle" type="button" aria-label="Toggle Biwa &amp; Ambient Sound">
+        <span id="audio-icon">🔇</span>
+        <span id="audio-label">SOUND: OFF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Chamber Navigation (Right Edge on Desktop, Bottom Dock on Mobile) -->
+  <nav class="chamber-nav" aria-label="Castle Levels">
+    <button class="nav-item active" data-index="0" onclick="warpToSection(0)" aria-label="Level 01 Entrance">
+      <span class="nav-text">01 Entrance</span>
+      <span class="nav-diamond"></span>
+    </button>
+    <button class="nav-item" data-index="1" onclick="warpToSection(1)" aria-label="Level 02 Chambers">
+      <span class="nav-text">02 Chambers</span>
+      <span class="nav-diamond"></span>
+    </button>
+    <button class="nav-item" data-index="2" onclick="warpToSection(2)" aria-label="Level 03 Forged Works">
+      <span class="nav-text">03 Forged Works</span>
+      <span class="nav-diamond"></span>
+    </button>
+    <button class="nav-item" data-index="3" onclick="warpToSection(3)" aria-label="Level 04 Abyssal Gate">
+      <span class="nav-text">04 Abyssal Gate</span>
+      <span class="nav-diamond"></span>
+    </button>
+  </nav>
+
+  <!-- Floating Ornate Shoji Panels -->
+  <main id="panels-stage">
+    <!-- LEVEL 01: ENTRANCE -->
+    <section class="shoji-panel" id="panel-0">
+      <div class="level-tag">Level 01 // The Entrance</div>
+      <h1 class="hero-title">Ashu Newatia</h1>
+      <p class="hero-subtitle">Computer Science Undergrad @ IIT Indore | Full-Stack &amp; Systems Developer</p>
+      <p class="hero-desc">
+        Engineering real-time web systems, low-latency AI voice agents, and high-throughput algorithmic engines. Descend through the lantern-lit abyss as sliding gates and shifting 90° chambers reveal my architecture and forged builds.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" type="button" onclick="warpToSection(2)">Explore Forged Works</button>
+        <a class="btn-ghost" href="./resume.pdf" target="_blank" rel="noopener">Resume PDF ↗</a>
+        <button class="btn-ghost" type="button" onclick="triggerBiwaShift(true)">Pluck Biwa [Space]</button>
+        <div class="scroll-cue">
+          <span>SCROLL TO DESCEND</span>
+          <span class="scroll-arrow">▼</span>
         </div>
-        <figure class="scene-art project-panel" id="flow-demo" tabindex="-1">
-          <figcaption>GitHub issue sync · Simulation</figcaption>
-          <div class="sync-row"><span>GitHub issue</span><strong>Fix issue import</strong></div>
-          <div class="sync-row"><span>CampusFlow board</span><strong id="flow-state" role="status">Waiting for update</strong></div>
-          <button type="button" class="small-button" id="flow-sync">Simulate issue update</button>
-        </figure>
       </div>
     </section>
-    <section class="scene project transit" id="instibus" aria-labelledby="instibus-title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy">
-          <p class="eyebrow">Selected work <span class="hairline"></span> Full-stack</p>
-          <h2 id="instibus-title">InstiBus<span>.</span></h2>
-          <p class="lede">A campus bus system for IIT Indore.</p>
-          <p class="description">Our four-person DBMS project handled dated schedules, bookings, waitlists and trip requests. PostgreSQL transactions kept competing bookings from claiming the same last seat, and Razorpay powered test-mode checkout.</p>
-          <p class="tech"><b class="tech-warm">Next.js</b> <span>·</span> <b class="tech-cool">PostgreSQL</b> <span>·</span> Razorpay</p>
-          <p class="project-links"><a href="https://github.com/AshuNewatia/Instibus">Source (access required) <span aria-hidden="true">↗</span></a><a href="#booking-demo">Booking demo</a></p>
-          <details class="project-diary">
-            <summary><span lang="ja">日記</span> Last-seat concurrency</summary>
-            <div class="diary-paper">
-              <p class="diary-location">IIT Indore</p>
-              <p>PostgreSQL handles the seat allocation inside a transaction. Razorpay test checkout and waitlist handling sit around the booking flow.</p>
-            </div>
-          </details>
-        </div>
-        <figure class="scene-art booking-demo" id="booking-demo" tabindex="-1" aria-labelledby="booking-caption">
-          <div class="demo-header"><span>Booking simulation</span><strong class="seat-count">0 seats left</strong></div>
-          <div class="booking-lanes">
-            <div class="booking-row"><span class="passenger">Passenger A</span><span class="request-track" aria-hidden="true"><i></i></span><strong class="booking-winner">Ticket issued</strong></div>
-            <div class="booking-row"><span class="passenger">Passenger B</span><span class="request-track" aria-hidden="true"><i></i></span><strong class="booking-wait">Waitlisted</strong></div>
+
+    <!-- LEVEL 02: THE CHAMBERS -->
+    <section class="shoji-panel" id="panel-1">
+      <div class="level-tag">Level 02 // The Chambers</div>
+      <h2 class="section-heading">Architecture &amp; Arsenal</h2>
+      <p class="about-bio">
+        Second-year B.Tech Computer Science &amp; Engineering student at <strong>IIT Indore (9.04 CPI)</strong>. Frontend Developer for IIT Indore’s <strong>Career Advancement and Mentoring Centre (CAMC)</strong>, active builder with <strong>The Programming Club</strong> and <strong>GDG IIT Indore</strong>, and competitive programmer (<strong>Codeforces Rating: 1630</strong> | <strong>SRMC Stage 2 AIR 76</strong>).
+      </p>
+      <div class="ema-grid">
+        <div class="ema-plaque">
+          <div class="ema-title">Languages</div>
+          <div class="ema-tags">
+            <span class="ema-tag">C++17</span>
+            <span class="ema-tag">TypeScript</span>
+            <span class="ema-tag">JavaScript</span>
+            <span class="ema-tag">SQL</span>
           </div>
-          <figcaption id="booking-caption">Two requests. One seat.</figcaption>
-          <button class="small-button" id="simulate-booking" type="button">Simulate concurrent booking</button>
-        </figure>
-      </div>
-    </section>
-    <section class="scene project market" id="campus-olx" aria-labelledby="olx-title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy">
-          <p class="eyebrow">Selected work <span class="hairline"></span> In development</p>
-          <h2 id="olx-title">Campus OLX<span>.</span></h2>
-          <p class="lede">A marketplace for the campus community.</p>
-          <p class="description">I’m developing it with seniors so students can buy and sell within IIT Indore, close to the people they’re trading with.</p>
-          <p class="tech">Web development <span>·</span> Marketplace</p>
-          <p class="project-links"><a href="#olx-demo">Sample listings</a></p>
-          <details class="project-diary">
-            <summary><span lang="ja">日記</span> Campus marketplace</summary>
-            <div class="diary-paper">
-              <p class="diary-location">IIT Indore</p>
-              <p>This project is in development. The sample listings illustrate the buy-and-sell experience for students on campus.</p>
-            </div>
-          </details>
         </div>
-        <figure class="scene-art project-panel" id="olx-demo" tabindex="-1">
-          <figcaption>Sample campus listings</figcaption>
-          <div class="sync-row"><span>Engineering Graphics Kit</span><strong>₹350</strong></div>
-          <div class="sync-row"><span>Hero Sprint Cycle</span><strong>₹3,200</strong></div>
-          <div class="sync-row"><span>Calculus Textbook</span><strong>₹200</strong></div>
-        </figure>
-      </div>
-    </section>
-    <section class="scene project voice" id="campus-assistant" aria-labelledby="assistant-title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy">
-          <p class="eyebrow">Selected work <span class="hairline"></span> Voice AI</p>
-          <h2 id="assistant-title">Campus <br>Assistant<span>.</span></h2>
-          <p class="lede">A real-time voice assistant for IIT Indore.</p>
-          <p class="description">We adapted a LiveKit voice agent for campus questions, reworking its interface, voice commands, and responses for an institute audience.</p>
-          <p class="tech"><b class="tech-warm">LiveKit Agents</b> <span>·</span> <b class="tech-cool">Node.js</b></p>
-          <p class="project-links"><a href="https://github.com/AshuNewatia/Live-Voice-Agent">Source <span aria-hidden="true">↗</span></a><a href="https://live-voice-agent.vercel.app">Live demo (original voice agent) <span aria-hidden="true">↗</span></a><a href="#voice-demo">Sample prompt</a></p>
-          <details class="project-diary">
-            <summary><span lang="ja">日記</span> From speech to response</summary>
-            <div class="diary-paper">
-              <p class="diary-location">IIT Indore</p>
-              <p>LiveKit carries real-time audio. The campus version adapts the interface, commands, and responses for IIT Indore questions.</p>
-            </div>
-          </details>
-        </div>
-        <figure class="scene-art signal project-panel" id="voice-demo" tabindex="-1" aria-labelledby="signal-caption">
-          <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <figcaption id="signal-caption">Real-time voice</figcaption>
-          <button class="small-button" type="button" id="sample-prompt" aria-expanded="false" aria-controls="voice-transcript">Sample prompt</button>
-          <div id="voice-transcript" hidden><p><strong>Student:</strong> When is the next bus to Simrol?</p><p><strong>Assistant:</strong> Where are you departing from? I can help you check the schedule.</p></div>
-        </figure>
-      </div>
-    </section>
-    <section class="scene project triage" id="triage" aria-labelledby="triage-title">
-      <div class="scene-inner">
-        <svg class="split-knot" viewBox="-20 -12 40 24" aria-hidden="true" focusable="false"><use href="#musubi-knot" /></svg>
-        <div class="copy">
-          <p class="eyebrow">Selected work <span class="hairline"></span> Systems</p>
-          <h2 id="triage-title">Triage Queue <br>Simulation<span>.</span></h2>
-          <p class="lede">Comparing priority queues and aging policies in C++.</p>
-          <p class="description">As the team’s architect, I defined the shared interface and integrated the simulator. We compared indexed and lazy heaps against an unsorted-array reference and logged simulated patient wait times.</p>
-          <p class="tech"><b class="tech-cool">C++</b> <span>·</span> Indexed heap <span>·</span> Lazy heap</p>
-          <p class="project-links"><a href="https://github.com/AshuNewatia/OmniCoders_DSA_Project">Source <span aria-hidden="true">↗</span></a><a href="#aging-demo">Queue demo</a></p>
-          <details class="project-diary">
-            <summary><span lang="ja">日記</span> Queue design</summary>
-            <div class="diary-paper">
-              <p class="diary-location">IIT Indore</p>
-              <p>The shared C++ interface lets the simulator compare an indexed heap and a lazy heap against the same unsorted-array reference.</p>
-            </div>
-          </details>
-        </div>
-        <figure class="scene-art aging-demo" id="aging-demo" tabindex="-1" aria-labelledby="heap-caption">
-          <div class="demo-header"><span>Simulated wait</span><strong class="elapsed-wait">40 min</strong></div>
-          <div class="heap-tree" aria-hidden="true">
-            <div class="heap-edges"></div>
-            <div class="heap-node patient-a">A</div>
-            <div class="heap-node patient-b">B</div>
-            <div class="heap-node patient-c">C</div>
+        <div class="ema-plaque">
+          <div class="ema-title">Frontend &amp; 3D</div>
+          <div class="ema-tags">
+            <span class="ema-tag">React.js</span>
+            <span class="ema-tag">Next.js</span>
+            <span class="ema-tag">Tailwind CSS</span>
+            <span class="ema-tag">Three.js</span>
+            <span class="ema-tag">HTML5/CSS3</span>
           </div>
-          <figcaption id="heap-caption">Aging raises patient B’s priority.</figcaption>
-          <button class="small-button" id="step-aging" type="button">Step +10 min</button>
-        </figure>
-      </div>
-    </section>
-    <section class="scene about" id="about" aria-labelledby="about-title">
-      <div class="scene-inner">
-        <div class="copy">
-          <p class="eyebrow"><span class="memory-subtitle" lang="ja">カタワレ時</span><span class="hairline"></span> About · IIT Indore</p>
-          <h2 id="about-title">Beyond <br>the repo<span>.</span></h2>
-          <p class="description">I’m a B.Tech student at IIT Indore. Alongside my software projects, I help teach web fundamentals through campus workshops.</p>
         </div>
-        <dl class="credentials">
-          <div><dt>GDG IIT Indore</dt><dd>Web Development Domain Lead</dd></div>
-          <div><dt>CSESA</dt><dd>Coordinator</dd></div>
-          <div><dt><a href="https://codeforces.com/profile/Ashu23">Codeforces</a></dt><dd>Expert <span>·</span> 1630 peak rating</dd></div>
-          <div><dt>Diffusion models</dt><dd>Research collaboration with PhD seniors</dd></div>
-          <div><dt>SRMC</dt><dd>Stage 2 <span>·</span> AIR 76</dd></div>
-        </dl>
-      </div>
-    </section>
-    <section class="scene finale" id="dawn" aria-labelledby="contact-title">
-      <div class="scene-inner">
-        <div class="stairway stairway-left" aria-hidden="true"></div>
-        <div class="stairway stairway-right" aria-hidden="true"></div>
-        <div class="copy finale-copy">
-          <p class="eyebrow"><span class="memory-subtitle" lang="ja">朝</span><span class="hairline"></span> Contact</p>
-          <h2 id="contact-title">Let’s connect<span>.</span></h2>
-          <svg class="ink-signature" viewBox="0 0 180 22" aria-hidden="true" focusable="false">
-            <path d="M3 18C28 8 52 5 82 7s40 9 27 11S85 4 126 3c16 0 30 0 50 4"/>
-          </svg>
-          <p class="lede">Browse my code or get in touch about a project.</p>
-          <div class="contact-links">
-            <a href="https://github.com/AshuNewatia">GitHub</a>
-            <a href="https://www.linkedin.com/in/ashunewatia23/">LinkedIn</a>
-            <a href="https://codeforces.com/profile/Ashu23">Codeforces</a>
-            <a class="resume-link" href="./Ashu-Newatia-Resume.pdf" download>Résumé PDF</a>
-            <button class="small-button" type="button" id="copy-email">Copy email</button>
+        <div class="ema-plaque">
+          <div class="ema-title">Backend &amp; Real-Time</div>
+          <div class="ema-tags">
+            <span class="ema-tag">Node.js</span>
+            <span class="ema-tag">Express.js</span>
+            <span class="ema-tag">Socket.IO</span>
+            <span class="ema-tag">LiveKit WebRTC</span>
           </div>
-          <a class="contact-link" href="mailto:cse250001011@iiti.ac.in">cse250001011@iiti.ac.in</a>
-          <p id="copy-status" class="copy-status" role="status"></p>
         </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Databases &amp; Tools</div>
+          <div class="ema-tags">
+            <span class="ema-tag">PostgreSQL</span>
+            <span class="ema-tag">MySQL</span>
+            <span class="ema-tag">MongoDB</span>
+            <span class="ema-tag">Git/GitHub</span>
+            <span class="ema-tag">Linux</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 03: FORGED WORKS -->
+    <section class="shoji-panel" id="panel-2">
+      <div class="level-tag">Level 03 // Forged Works</div>
+      <h2 class="section-heading">Selected Systems &amp; Builds</h2>
+      <div class="projects-grid">
+        <article class="lantern-card">
+          <div>
+            <div class="project-num">CHAMBER I // REAL-TIME AI</div>
+            <h3 class="project-title">Live Voice Agent</h3>
+            <p class="project-desc">
+              Real-time tactical AI voice assistant engineered for sub-second conversational latency using WebRTC audio streaming and neural speech pipelines.
+            </p>
+          </div>
+          <div class="project-footer">
+            <div class="ema-tags">
+              <span class="ema-tag">TypeScript</span>
+              <span class="ema-tag">LiveKit WebRTC</span>
+              <span class="ema-tag">Deepgram Nova-3</span>
+              <span class="ema-tag">Gemma-4</span>
+              <span class="ema-tag">Cartesia TTS</span>
+            </div>
+            <div class="project-links">
+              <a class="project-link" href="https://github.com/AshuNewatia/Live-Voice-Agent" target="_blank" rel="noopener">View Repo ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="lantern-card">
+          <div>
+            <div class="project-num">CHAMBER II // IITISOC'26 — 3RD PLACE</div>
+            <h3 class="project-title">CampusFlow</h3>
+            <p class="project-desc">
+              Real-time collaborative project workspace with bidirectional GitHub sync, live task boards, and automated PDF reporting with active student teams.
+            </p>
+          </div>
+          <div class="project-footer">
+            <div class="ema-tags">
+              <span class="ema-tag">MongoDB</span>
+              <span class="ema-tag">Express</span>
+              <span class="ema-tag">React</span>
+              <span class="ema-tag">Node.js</span>
+              <span class="ema-tag">Socket.IO</span>
+              <span class="ema-tag">Octokit</span>
+            </div>
+            <div class="project-links">
+              <a class="project-link" href="https://github.com/AshuNewatia/SoC" target="_blank" rel="noopener">View Repo ↗</a>
+              <a class="project-link" href="https://github.com/AshuNewatia/SoC#readme" target="_blank" rel="noopener">Live Demo ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="lantern-card">
+          <div>
+            <div class="project-num">CHAMBER III // CAMPUS TRANSIT</div>
+            <h3 class="project-title">Instibus (Campus Express)</h3>
+            <p class="project-desc">
+              Full-stack institute bus scheduling and real-time seat booking platform architected for campus transit logistics and relational data integrity.
+            </p>
+          </div>
+          <div class="project-footer">
+            <div class="ema-tags">
+              <span class="ema-tag">Next.js</span>
+              <span class="ema-tag">React</span>
+              <span class="ema-tag">Node.js</span>
+              <span class="ema-tag">PostgreSQL</span>
+              <span class="ema-tag">MySQL</span>
+            </div>
+            <div class="project-links">
+              <a class="project-link" href="https://github.com/AshuNewatia/Instibus" target="_blank" rel="noopener">View Repo ↗</a>
+              <a class="project-link" href="https://github.com/AshuNewatia/Instibus#readme" target="_blank" rel="noopener">Live Demo ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="lantern-card">
+          <div>
+            <div class="project-num">CHAMBER IV // SYSTEMS ARCHITECTURE</div>
+            <h3 class="project-title">Emergency Triage Queue Engine</h3>
+            <p class="project-desc">
+              High-throughput C++17 priority simulation engine implementing linear and step-wise aging policies with formal mathematical latency bounds.
+            </p>
+          </div>
+          <div class="project-footer">
+            <div class="ema-tags">
+              <span class="ema-tag">C++17</span>
+              <span class="ema-tag">Data Structures</span>
+              <span class="ema-tag">Algorithms</span>
+              <span class="ema-tag">Simulation</span>
+            </div>
+            <div class="project-links">
+              <a class="project-link" href="https://github.com/AshuNewatia/cs253-omnicoders-p10" target="_blank" rel="noopener">View Repo ↗</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- LEVEL 04: THE ABYSSAL GATE -->
+    <section class="shoji-panel" id="panel-3">
+      <div class="level-tag">Level 04 // The Abyssal Gate</div>
+      <h2 class="section-heading">Summon &amp; Collaborate</h2>
+      <p class="about-bio">
+        Open to software engineering internships, systems architecture discussions, full-stack builds, and competitive programming collaborations.
+      </p>
+      <div class="contact-grid">
+        <a class="gate-link" href="mailto:cse250001011@iiti.ac.in">
+          <span class="gate-platform">Direct Mail</span>
+          <span class="gate-handle">cse250001011@iiti.ac.in</span>
+        </a>
+        <a class="gate-link" href="https://github.com/AshuNewatia" target="_blank" rel="noopener">
+          <span class="gate-platform">GitHub</span>
+          <span class="gate-handle">github.com/AshuNewatia</span>
+        </a>
+        <a class="gate-link" href="https://linkedin.com/in/ashunewatia23" target="_blank" rel="noopener">
+          <span class="gate-platform">LinkedIn</span>
+          <span class="gate-handle">in/ashunewatia23</span>
+        </a>
+        <a class="gate-link" href="https://codeforces.com/profile/Ashu23" target="_blank" rel="noopener">
+          <span class="gate-platform">Codeforces</span>
+          <span class="gate-handle">Ashu23</span>
+        </a>
+      </div>
+      <div class="loop-notice">
+        <span>∞ INFINITE CASTLE LOOP ACTIVE — KEEP SCROLLING TO RE-ENTER UPPER CHAMBERS</span>
+        <span>▼</span>
       </div>
     </section>
   </main>
+
+  <!-- Bottom-Right Looping Music Player -->
+  <aside class="castle-player" id="castlePlayer" aria-label="Infinity Castle Theme Player">
+    <button
+      type="button"
+      class="castle-toggle-btn"
+      id="castleToggleBtn"
+      aria-label="Play or pause Infinity Castle Theme"
+    >
+      ▶
+    </button>
+
+    <div class="castle-meta">
+      <span class="castle-title">Infinity Castle Theme</span>
+      <span class="castle-status" id="castleStatus">Loop • Paused</span>
+    </div>
+
+    <div class="castle-eq" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <audio
+      id="castleAudio"
+      src="./infinity-castle-theme.mp3"
+      loop
+      preload="metadata"
+    ></audio>
+  </aside>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ==========================================
+    // 1. WEB AUDIO: BIWA + AMBIENT ABYSSAL DRONE
+    // ==========================================
+    let audioEnabled = false;
+    let audioCtx = null;
+    let droneGain = null;
+    let droneStarted = false;
+
+    const audioToggleBtn = document.getElementById('audio-toggle');
+    const audioIcon = document.getElementById('audio-icon');
+    const audioLabel = document.getElementById('audio-label');
+
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function setAmbientDrone(active) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      if (active && !droneStarted) {
+        droneStarted = true;
+        droneGain = audioCtx.createGain();
+        droneGain.gain.setValueAtTime(0.0001, now);
+
+        const droneFilter = audioCtx.createBiquadFilter();
+        droneFilter.type = 'lowpass';
+        droneFilter.frequency.setValueAtTime(145, now);
+
+        const d1 = audioCtx.createOscillator();
+        const a1 = audioCtx.createOscillator();
+        d1.type = 'sawtooth';
+        a1.type = 'triangle';
+        d1.frequency.setValueAtTime(36.71, now);
+        a1.frequency.setValueAtTime(55.0, now);
+
+        d1.connect(droneFilter);
+        a1.connect(droneFilter);
+        droneFilter.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+
+        d1.start(now);
+        a1.start(now);
+      }
+
+      if (droneGain) {
+        droneGain.gain.cancelScheduledValues(now);
+        droneGain.gain.setValueAtTime(Math.max(0.0001, droneGain.gain.value), now);
+        droneGain.gain.linearRampToValueAtTime(active ? 0.045 : 0.0001, now + 0.65);
+      }
+    }
+
+    function setAudioState(enabled, playPluck = false) {
+      audioEnabled = enabled;
+      if (audioEnabled) {
+        ensureAudioContext();
+        audioIcon.textContent = '🔊';
+        audioLabel.textContent = 'SOUND: ON';
+        setAmbientDrone(true);
+        if (playPluck) playBiwaPluck();
+      } else {
+        audioIcon.textContent = '🔇';
+        audioLabel.textContent = 'SOUND: OFF';
+        setAmbientDrone(false);
+      }
+    }
+
+    audioToggleBtn.addEventListener('click', () => setAudioState(!audioEnabled, !audioEnabled));
+
+    function playBiwaPluck() {
+      if (!audioEnabled || !audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const subOsc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'triangle';
+      subOsc.type = 'sine';
+
+      osc1.frequency.setValueAtTime(155.56, now);
+      osc1.frequency.exponentialRampToValueAtTime(110.0, now + 0.13);
+      osc1.frequency.exponentialRampToValueAtTime(118.0, now + 0.65);
+
+      osc2.frequency.setValueAtTime(311.13, now);
+      osc2.frequency.exponentialRampToValueAtTime(220.0, now + 0.15);
+
+      subOsc.frequency.setValueAtTime(77.78, now);
+      subOsc.frequency.exponentialRampToValueAtTime(55.0, now + 0.25);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1950, now);
+      filter.frequency.exponentialRampToValueAtTime(260, now + 1.05);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.32, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0008, now + 1.25);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      subOsc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      subOsc.start(now);
+      osc1.stop(now + 1.3);
+      osc2.stop(now + 1.3);
+      subOsc.stop(now + 1.3);
+    }
+
+    // ==========================================
+    // 2. SLIDING SHOJI GATE PRELOADER
+    // ==========================================
+    const preloader = document.getElementById('shoji-preloader');
+    const preloaderBar = document.getElementById('preloader-bar');
+    const preloaderHint = document.getElementById('preloader-hint');
+    let preloaderOpened = false;
+
+    function openShojiPreloader(userClicked = false) {
+      if (preloaderOpened) return;
+      preloaderOpened = true;
+      preloaderBar.style.width = '100%';
+      preloaderHint.textContent = 'GATES OPENING...';
+
+      if (userClicked) setAudioState(true, true);
+
+      preloader.classList.add('opened');
+      if (!prefersReducedMotion) {
+        const flash = document.getElementById('biwa-flash');
+        flash.classList.add('active');
+        setTimeout(() => flash.classList.remove('active'), 140);
+      }
+    }
+
+    preloader.addEventListener('click', () => openShojiPreloader(true));
+
+    requestAnimationFrame(() => { preloaderBar.style.width = '82%'; });
+    window.addEventListener('load', () => {
+      preloaderBar.style.width = '100%';
+      setTimeout(() => openShojiPreloader(false), prefersReducedMotion ? 250 : 950);
+    });
+
+    // ==========================================
+    // 3. GLOWING BIWA-STRING CURSOR TRAIL
+    // ==========================================
+    const cursorCanvas = document.getElementById('cursor-canvas');
+    const cursorCtx = cursorCanvas.getContext('2d');
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const enableCursorTrail = !isCoarsePointer && !prefersReducedMotion;
+
+    let cw = window.innerWidth;
+    let ch = window.innerHeight;
+    function resizeCursorCanvas() {
+      cw = window.innerWidth;
+      ch = window.innerHeight;
+      cursorCanvas.width = cw;
+      cursorCanvas.height = ch;
+    }
+    resizeCursorCanvas();
+
+    const trailPoints = [];
+    const MAX_TRAIL = 26;
+    const cursorRipples = [];
+    let pointerActive = false;
+    let pointerX = cw / 2;
+    let pointerY = ch / 2;
+    let lastPointerX = pointerX;
+    let lastPointerY = pointerY;
+    let stringVibration = 0;
+
+    if (enableCursorTrail) {
+      window.addEventListener('mousemove', (e) => {
+        pointerActive = true;
+        pointerX = e.clientX;
+        pointerY = e.clientY;
+        const speed = Math.hypot(pointerX - lastPointerX, pointerY - lastPointerY);
+        stringVibration = Math.min(18, stringVibration + speed * 0.14);
+        lastPointerX = pointerX;
+        lastPointerY = pointerY;
+        trailPoints.unshift({ x: pointerX, y: pointerY, age: 0 });
+        if (trailPoints.length > MAX_TRAIL) trailPoints.pop();
+      }, { passive: true });
+
+      window.addEventListener('mousedown', (e) => {
+        stringVibration = 22;
+        cursorRipples.push({ x: e.clientX, y: e.clientY, radius: 4, maxRadius: 68, alpha: 0.95 });
+      }, { passive: true });
+    }
+
+    function renderCursorTrail(timeSec) {
+      if (!enableCursorTrail) return;
+      cursorCtx.clearRect(0, 0, cw, ch);
+
+      stringVibration *= 0.9;
+      for (let i = trailPoints.length - 1; i >= 0; i--) {
+        trailPoints[i].age += 0.065;
+        if (trailPoints[i].age >= 1) trailPoints.splice(i, 1);
+      }
+
+      if (trailPoints.length > 2) {
+        cursorCtx.save();
+        cursorCtx.lineCap = 'round';
+        cursorCtx.lineJoin = 'round';
+
+        for (let i = 0; i < trailPoints.length - 1; i++) {
+          const p0 = trailPoints[i];
+          const p1 = trailPoints[i + 1];
+          const progress = 1 - i / trailPoints.length;
+          const fade = Math.max(0, 1 - p0.age) * progress;
+
+          const dx = p1.x - p0.x;
+          const dy = p1.y - p0.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const nx = -dy / len;
+          const ny = dx / len;
+          const wave = Math.sin(timeSec * 36 + i * 0.9) * stringVibration * 0.18 * (1 - progress);
+
+          cursorCtx.beginPath();
+          cursorCtx.moveTo(p0.x + nx * wave, p0.y + ny * wave);
+          cursorCtx.lineTo(p1.x - nx * wave, p1.y - ny * wave);
+
+          cursorCtx.strokeStyle = `rgba(255, 148, 46, ${(fade * 0.45).toFixed(3)})`;
+          cursorCtx.lineWidth = Math.max(1, fade * 7.5);
+          cursorCtx.stroke();
+
+          cursorCtx.strokeStyle = `rgba(255, 240, 195, ${(fade * 0.92).toFixed(3)})`;
+          cursorCtx.lineWidth = Math.max(0.6, fade * 2.1);
+          cursorCtx.stroke();
+        }
+        cursorCtx.restore();
+      }
+
+      if (pointerActive) {
+        const tipGrad = cursorCtx.createRadialGradient(pointerX, pointerY, 0, pointerX, pointerY, 13);
+        tipGrad.addColorStop(0, 'rgba(255, 248, 220, 0.95)');
+        tipGrad.addColorStop(0.35, 'rgba(255, 170, 68, 0.65)');
+        tipGrad.addColorStop(1, 'rgba(194, 29, 36, 0)');
+        cursorCtx.fillStyle = tipGrad;
+        cursorCtx.beginPath();
+        cursorCtx.arc(pointerX, pointerY, 13, 0, Math.PI * 2);
+        cursorCtx.fill();
+      }
+
+      for (let i = cursorRipples.length - 1; i >= 0; i--) {
+        const r = cursorRipples[i];
+        r.radius += (r.maxRadius - r.radius) * 0.14;
+        r.alpha *= 0.91;
+
+        cursorCtx.save();
+        cursorCtx.beginPath();
+        cursorCtx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        cursorCtx.strokeStyle = `rgba(255, 180, 76, ${r.alpha.toFixed(3)})`;
+        cursorCtx.lineWidth = 1.8;
+        cursorCtx.stroke();
+
+        cursorCtx.beginPath();
+        cursorCtx.arc(r.x, r.y, r.radius * 0.68, 0, Math.PI * 2);
+        cursorCtx.strokeStyle = `rgba(194, 29, 36, ${(r.alpha * 0.8).toFixed(3)})`;
+        cursorCtx.lineWidth = 1.1;
+        cursorCtx.stroke();
+        cursorCtx.restore();
+
+        if (r.alpha < 0.03) cursorRipples.splice(i, 1);
+      }
+    }
+
+    // ==========================================
+    // 4. PROCEDURAL JAPANESE TEXTURES
+    // ==========================================
+    function createShojiTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256; c.height = 256;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createRadialGradient(128, 128, 10, 128, 128, 185);
+      grad.addColorStop(0, '#ffe3a8');
+      grad.addColorStop(0.5, '#ff9d3b');
+      grad.addColorStop(1, '#6e2809');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+
+      ctx.strokeStyle = '#180b05';
+      ctx.lineWidth = 12;
+      ctx.strokeRect(0, 0, 256, 256);
+
+      ctx.lineWidth = 4;
+      for (let i = 1; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo((256 / 4) * i, 0);
+        ctx.lineTo((256 / 4) * i, 256);
+        ctx.stroke();
+      }
+      for (let j = 1; j < 6; j++) {
+        ctx.beginPath();
+        ctx.moveTo(0, (256 / 6) * j);
+        ctx.lineTo(256, (256 / 6) * j);
+        ctx.stroke();
+      }
+      return new THREE.CanvasTexture(c);
+    }
+
+    function createFusumaDoorTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256; c.height = 512;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#2a140a');
+      grad.addColorStop(0.5, '#1e0e07');
+      grad.addColorStop(1, '#120804');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 512);
+
+      const paperGrad = ctx.createRadialGradient(128, 160, 10, 128, 160, 140);
+      paperGrad.addColorStop(0, '#ffd88c');
+      paperGrad.addColorStop(0.6, '#eb862a');
+      paperGrad.addColorStop(1, '#5e2108');
+      ctx.fillStyle = paperGrad;
+      ctx.fillRect(24, 28, 208, 270);
+
+      ctx.strokeStyle = '#140904';
+      ctx.lineWidth = 5;
+      for (let x = 24; x <= 232; x += 52) {
+        ctx.beginPath(); ctx.moveTo(x, 28); ctx.lineTo(x, 298); ctx.stroke();
+      }
+      for (let y = 28; y <= 298; y += 45) {
+        ctx.beginPath(); ctx.moveTo(24, y); ctx.lineTo(232, y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#d48d3b';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(12, 12, 232, 488);
+
+      ctx.fillStyle = '#0c0503';
+      ctx.beginPath();
+      ctx.arc(48, 355, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffaa44';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    function createLanternBodyTexture() {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 128;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 0, 128);
+      grad.addColorStop(0, '#ff7b1c');
+      grad.addColorStop(0.5, '#fff0b8');
+      grad.addColorStop(1, '#ff6a14');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+
+      ctx.strokeStyle = 'rgba(40, 14, 4, 0.55)';
+      ctx.lineWidth = 3;
+      for (let y = 14; y < 128; y += 16) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(128, y); ctx.stroke();
+      }
+
+      ctx.fillStyle = 'rgba(184, 24, 30, 0.72)';
+      ctx.fillRect(54, 24, 20, 80);
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    function createLanternGlowTexture() {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 128;
+      const ctx = c.getContext('2d');
+      const grad = ctx.createRadialGradient(64, 64, 2, 64, 64, 64);
+      grad.addColorStop(0, 'rgba(255, 238, 180, 1)');
+      grad.addColorStop(0.22, 'rgba(255, 168, 56, 0.78)');
+      grad.addColorStop(0.55, 'rgba(220, 82, 22, 0.25)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(c);
+    }
+
+    function createPortalGlowTexture(isCrimson) {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 256;
+      const ctx = c.getContext('2d');
+      const grad = ctx.createRadialGradient(64, 128, 8, 64, 128, 130);
+      if (isCrimson) {
+        grad.addColorStop(0, '#ff8e7a');
+        grad.addColorStop(0.45, '#c21d24');
+        grad.addColorStop(1, '#260406');
+      } else {
+        grad.addColorStop(0, '#fff7d6');
+        grad.addColorStop(0.45, '#ff9d3b');
+        grad.addColorStop(1, '#3b1305');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 256);
+      return new THREE.CanvasTexture(c);
+    }
+
+    // ==========================================
+    // 5. THREE.JS INFINITY CASTLE SCENE
+    // ==========================================
+    const canvas = document.getElementById('castle-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !prefersReducedMotion, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, prefersReducedMotion ? 1.25 : 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x090404);
+    scene.fog = new THREE.FogExp2(0x0b0504, 0.0125);
+
+    const camera = new THREE.PerspectiveCamera(64, window.innerWidth / window.innerHeight, 0.1, 240);
+
+    const castleRoot = new THREE.Group();
+    scene.add(castleRoot);
+
+    const ambientLight = new THREE.AmbientLight(0x4a2414, 1.5);
+    scene.add(ambientLight);
+
+    const coreLight = new THREE.PointLight(0xffa040, 2.8, 95);
+    scene.add(coreLight);
+
+    const upperLight = new THREE.PointLight(0xff7722, 1.8, 70);
+    scene.add(upperLight);
+
+    const abyssLight = new THREE.PointLight(0xc21d24, 2.2, 110);
+    scene.add(abyssLight);
+
+    const shojiTex = createShojiTexture();
+    const fusumaTex = createFusumaDoorTexture();
+    const lanternBodyTex = createLanternBodyTexture();
+    const lanternGlowTex = createLanternGlowTexture();
+    const amberPortalTex = createPortalGlowTexture(false);
+    const crimsonPortalTex = createPortalGlowTexture(true);
+
+    const cedarMat = new THREE.MeshStandardMaterial({ color: 0x24130b, roughness: 0.82, metalness: 0.1 });
+    const darkTimberMat = new THREE.MeshStandardMaterial({ color: 0x120905, roughness: 0.9 });
+    const roofTileMat = new THREE.MeshStandardMaterial({ color: 0x161214, roughness: 0.65, metalness: 0.25 });
+    const shojiMat = new THREE.MeshBasicMaterial({ map: shojiTex });
+    const fusumaMat = new THREE.MeshBasicMaterial({ map: fusumaTex });
+    const lanternBodyMat = new THREE.MeshBasicMaterial({ map: lanternBodyTex });
+    const crimsonTrimMat = new THREE.MeshBasicMaterial({ color: 0xc21d24 });
+    const amberPortalMat = new THREE.MeshBasicMaterial({ map: amberPortalTex, side: THREE.DoubleSide });
+    const crimsonPortalMat = new THREE.MeshBasicMaterial({ map: crimsonPortalTex, side: THREE.DoubleSide });
+
+    const lanternHaloMat = new THREE.SpriteMaterial({
+      map: lanternGlowTex,
+      color: 0xffb85c,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const crimsonHaloMat = new THREE.SpriteMaterial({
+      map: lanternGlowTex,
+      color: 0xff5533,
+      transparent: true,
+      opacity: 0.72,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const pillarGeo = new THREE.BoxGeometry(1.15, 16, 1.15);
+    const crossBeamGeo = new THREE.BoxGeometry(34, 0.85, 0.85);
+    const shojiWallGeo = new THREE.PlaneGeometry(7.2, 10.0);
+    const balconyGeo = new THREE.BoxGeometry(9.2, 0.5, 6.8);
+    const roofEaveGeo = new THREE.BoxGeometry(10.6, 0.35, 3.6);
+    const stepGeo = new THREE.BoxGeometry(3.1, 0.26, 1.05);
+
+    const lanternCylGeo = new THREE.CylinderGeometry(0.42, 0.36, 1.25, 10);
+    const lanternCapGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.16, 10);
+    const lanternCordGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.8, 4);
+
+    const gateDoorGeo = new THREE.BoxGeometry(2.35, 6.4, 0.18);
+    const gateFrameTopGeo = new THREE.BoxGeometry(5.6, 0.45, 0.55);
+    const gateFrameSideGeo = new THREE.BoxGeometry(0.45, 6.8, 0.55);
+    const gateBackdropGeo = new THREE.PlaneGeometry(4.8, 6.3);
+
+    const isMobile = window.innerWidth < 768;
+    const NUM_CHUNKS = (isMobile || prefersReducedMotion) ? 9 : 14;
+    const CHUNK_SPACING = 15.5;
+    const TOTAL_SPAN = NUM_CHUNKS * CHUNK_SPACING;
+
+    const chunks = [];
+    const animatedGates = [];
+    const animatedLanterns = [];
+    const escherModules = [];
+
+    function createLantern(scale = 1, isRedTint = false) {
+      const g = new THREE.Group();
+
+      const cord = new THREE.Mesh(lanternCordGeo, darkTimberMat);
+      cord.position.y = 1.45;
+      g.add(cord);
+
+      const topCap = new THREE.Mesh(lanternCapGeo, darkTimberMat);
+      topCap.position.y = 0.66;
+      g.add(topCap);
+
+      const body = new THREE.Mesh(lanternCylGeo, lanternBodyMat);
+      g.add(body);
+
+      const bottomCap = new THREE.Mesh(lanternCapGeo, darkTimberMat);
+      bottomCap.position.y = -0.66;
+      g.add(bottomCap);
+
+      const halo = new THREE.Sprite(isRedTint ? crimsonHaloMat : lanternHaloMat);
+      halo.scale.set(5.4, 5.4, 1);
+      g.add(halo);
+
+      g.scale.setScalar(scale);
+
+      animatedLanterns.push({
+        group: g,
+        halo,
+        baseScale: 5.4,
+        phase: Math.random() * Math.PI * 2,
+        speed: 1.2 + Math.random() * 1.4
+      });
+
+      return g;
+    }
+
+    function createSlidingGate(isCrimsonPortal = false) {
+      const gate = new THREE.Group();
+
+      const topBar = new THREE.Mesh(gateFrameTopGeo, darkTimberMat);
+      topBar.position.y = 3.4;
+      gate.add(topBar);
+
+      const bottomBar = new THREE.Mesh(gateFrameTopGeo, darkTimberMat);
+      bottomBar.position.y = -3.4;
+      gate.add(bottomBar);
+
+      const leftPost = new THREE.Mesh(gateFrameSideGeo, darkTimberMat);
+      leftPost.position.x = -2.6;
+      gate.add(leftPost);
+
+      const rightPost = new THREE.Mesh(gateFrameSideGeo, darkTimberMat);
+      rightPost.position.x = 2.6;
+      gate.add(rightPost);
+
+      const backdrop = new THREE.Mesh(gateBackdropGeo, isCrimsonPortal ? crimsonPortalMat : amberPortalMat);
+      backdrop.position.z = -0.22;
+      gate.add(backdrop);
+
+      const leftDoor = new THREE.Mesh(gateDoorGeo, fusumaMat);
+      leftDoor.position.set(-1.18, 0, 0.02);
+      gate.add(leftDoor);
+
+      const rightDoor = new THREE.Mesh(gateDoorGeo, fusumaMat);
+      rightDoor.position.set(1.18, 0, 0.02);
+      rightDoor.rotation.y = Math.PI;
+      gate.add(rightDoor);
+
+      const gateLamp = createLantern(0.72, isCrimsonPortal);
+      gateLamp.position.set(0, 4.15, 0.9);
+      gate.add(gateLamp);
+
+      const startOpen = Math.random() > 0.55 ? 1 : 0;
+      animatedGates.push({
+        leftDoor,
+        rightDoor,
+        openProgress: startOpen,
+        targetOpen: startOpen,
+        nextToggle: 1.5 + Math.random() * 5.5
+      });
+
+      return gate;
+    }
+
+    function registerEscherModule(mesh, dir = 1) {
+      escherModules.push({
+        mesh,
+        baseZ: mesh.rotation.z,
+        currentOffsetZ: 0,
+        targetOffsetZ: 0,
+        dir
+      });
+    }
+
+    function buildCastleChunk(index) {
+      const group = new THREE.Group();
+      const radius = 19.5;
+      const sides = 8;
+
+      for (let s = 0; s < sides; s++) {
+        const angle = (s / sides) * Math.PI * 2 + (index * 0.22);
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+
+        const pillar = new THREE.Mesh(pillarGeo, darkTimberMat);
+        pillar.position.set(x, 0, z);
+        pillar.rotation.y = -angle;
+        group.add(pillar);
+
+        const wallDist = radius - 0.5;
+        if ((s + index) % 2 === 0) {
+          const gate = createSlidingGate((index + s) % 5 === 0);
+          gate.position.set(Math.cos(angle) * wallDist, (s % 2 === 0 ? -1.2 : 1.2), Math.sin(angle) * wallDist);
+          gate.lookAt(0, gate.position.y, 0);
+          if ((index + s) % 4 === 0) gate.rotation.z += Math.PI;
+          group.add(gate);
+        } else {
+          const shoji = new THREE.Mesh(shojiWallGeo, shojiMat);
+          shoji.position.set(Math.cos(angle) * wallDist, 0, Math.sin(angle) * wallDist);
+          shoji.lookAt(0, 0, 0);
+          group.add(shoji);
+        }
+
+        if ((s + index * 2) % 2 === 0) {
+          const balconyGroup = new THREE.Group();
+          const bY = (s % 2 === 0 ? -4.0 : 3.6);
+          balconyGroup.position.set(Math.cos(angle) * (radius - 3.6), bY, Math.sin(angle) * (radius - 3.6));
+          balconyGroup.lookAt(0, bY, 0);
+
+          const floor = new THREE.Mesh(balconyGeo, cedarMat);
+          balconyGroup.add(floor);
+
+          const eave = new THREE.Mesh(roofEaveGeo, roofTileMat);
+          eave.position.set(0, 3.2, 1.2);
+          eave.rotation.x = 0.28;
+          balconyGroup.add(eave);
+
+          const lampL = createLantern(0.85, false);
+          lampL.position.set(-4.1, 1.6, 2.5);
+          balconyGroup.add(lampL);
+
+          const lampR = createLantern(0.85, (s + index) % 3 === 0);
+          lampR.position.set(4.1, 1.6, 2.5);
+          balconyGroup.add(lampR);
+
+          if ((index + s) % 3 === 0) {
+            balconyGroup.rotation.z += (s % 2 === 0 ? Math.PI / 2 : Math.PI);
+          }
+
+          registerEscherModule(balconyGroup, (s % 2 === 0 ? 1 : -1));
+          group.add(balconyGroup);
+        }
+      }
+
+      const midGateCount = isMobile ? 1 : 2;
+      for (let m = 0; m < midGateCount; m++) {
+        const mAngle = index * 1.4 + m * Math.PI + 0.6;
+        const mRadius = 11.2 + (m * 2.2);
+        const floatingGate = createSlidingGate((index + m) % 3 === 0);
+        floatingGate.position.set(
+          Math.cos(mAngle) * mRadius,
+          (m === 0 ? 2.5 : -3.2),
+          Math.sin(mAngle) * mRadius
+        );
+        floatingGate.lookAt(0, floatingGate.position.y, 0);
+        floatingGate.rotation.z = ((index + m) % 3 - 1) * (Math.PI / 2);
+        floatingGate.scale.setScalar(0.82);
+        registerEscherModule(floatingGate, m === 0 ? 1 : -1);
+        group.add(floatingGate);
+      }
+
+      const bridge = new THREE.Mesh(crossBeamGeo, cedarMat);
+      bridge.rotation.y = index * 0.78;
+      bridge.rotation.z = ((index % 3) - 1) * 0.18;
+      group.add(bridge);
+
+      if (index % 2 === 0) {
+        const trim = new THREE.Mesh(new THREE.BoxGeometry(32, 0.22, 0.96), crimsonTrimMat);
+        trim.position.y = 0.52;
+        trim.rotation.y = bridge.rotation.y;
+        trim.rotation.z = bridge.rotation.z;
+        group.add(trim);
+      }
+
+      [-9, 0, 9].forEach((offset, idx) => {
+        const lamp = createLantern(0.95, idx === 1 && index % 2 === 0);
+        const cosY = Math.cos(bridge.rotation.y);
+        const sinY = Math.sin(bridge.rotation.y);
+        lamp.position.set(offset * cosY, -1.8 + offset * Math.sin(bridge.rotation.z), -offset * sinY);
+        group.add(lamp);
+      });
+
+      const stairGroup = new THREE.Group();
+      for (let k = 0; k < 7; k++) {
+        const step = new THREE.Mesh(stepGeo, cedarMat);
+        step.position.set(0, k * 0.62 - 2.1, k * 0.88 - 2.8);
+        stairGroup.add(step);
+      }
+      const stairAngle = index * 1.25;
+      stairGroup.position.set(Math.cos(stairAngle) * 11.8, 0, Math.sin(stairAngle) * 11.8);
+      stairGroup.rotation.y = -stairAngle + Math.PI / 2;
+      stairGroup.rotation.z = (index % 3 === 0) ? Math.PI : (index % 2 === 0 ? Math.PI / 2 : -Math.PI / 2);
+      registerEscherModule(stairGroup, index % 2 === 0 ? 1 : -1);
+      group.add(stairGroup);
+
+      return group;
+    }
+
+    for (let i = 0; i < NUM_CHUNKS; i++) {
+      const chunk = buildCastleChunk(i);
+      castleRoot.add(chunk);
+      chunks.push({ mesh: chunk, baseY: -i * CHUNK_SPACING });
+    }
+
+    const emberCount = prefersReducedMotion ? 140 : (isMobile ? 320 : 680);
+    const emberGeo = new THREE.BufferGeometry();
+    const emberPositions = new Float32Array(emberCount * 3);
+    for (let i = 0; i < emberCount; i++) {
+      const r = 6 + Math.random() * 24;
+      const theta = Math.random() * Math.PI * 2;
+      emberPositions[i * 3] = Math.cos(theta) * r;
+      emberPositions[i * 3 + 1] = (Math.random() - 0.5) * TOTAL_SPAN;
+      emberPositions[i * 3 + 2] = Math.sin(theta) * r;
+    }
+    emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPositions, 3));
+    const emberMat = new THREE.PointsMaterial({
+      map: lanternGlowTex,
+      color: 0xffb347,
+      size: 1.15,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const distantLamps = new THREE.Points(emberGeo, emberMat);
+    castleRoot.add(distantLamps);
+
+    // ==========================================
+    // 6. SMART PANEL SCROLL + INFINITE LOOP
+    // ==========================================
+    const NUM_SECTIONS = 4;
+    const SECTION_STEP = 1100;
+    const LOOP_HEIGHT = NUM_SECTIONS * SECTION_STEP;
+
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let scrollVelocity = 0;
+    let activeSectionIndex = 0;
+
+    let gravityStep = 0;
+    let targetCameraRoll = 0;
+    let currentCameraRoll = 0;
+    let targetShaftTwist = 0;
+    let currentShaftTwist = 0;
+    let biwaShake = 0;
+    let panelShiftKick = 0;
+
+    const panels = [
+      document.getElementById('panel-0'),
+      document.getElementById('panel-1'),
+      document.getElementById('panel-2'),
+      document.getElementById('panel-3')
+    ];
+    const navItems = document.querySelectorAll('.nav-item');
+    const depthMeter = document.getElementById('depth-meter');
+    const gravityMeter = document.getElementById('gravity-meter');
+    const biwaFlash = document.getElementById('biwa-flash');
+    const biwaShiftBtn = document.getElementById('biwa-shift-btn');
+
+    function canPanelScroll(target, deltaY) {
+      const panel = target && target.closest ? target.closest('.shoji-panel') : null;
+      if (!panel || panel.style.pointerEvents === 'none') return false;
+      const isOverflowing = panel.scrollHeight > panel.clientHeight + 2;
+      if (!isOverflowing) return false;
+      if (deltaY > 0 && panel.scrollTop + panel.clientHeight < panel.scrollHeight - 2) return true;
+      if (deltaY < 0 && panel.scrollTop > 2) return true;
+      return false;
+    }
+
+    window.triggerBiwaShift = function (forceAudio = false) {
+      if (forceAudio && !audioEnabled) setAudioState(true, false);
+
+      playBiwaPluck();
+
+      if (!prefersReducedMotion) {
+        biwaFlash.classList.add('active');
+        setTimeout(() => biwaFlash.classList.remove('active'), 115);
+
+        gravityStep += 1;
+        targetCameraRoll = gravityStep * (Math.PI / 2);
+        targetShaftTwist = gravityStep * (Math.PI / 2);
+        gravityMeter.textContent = `GRAVITY: ${(gravityStep * 90) % 360}°`;
+
+        biwaShake = 1.15;
+        panelShiftKick = 1.0;
+        stringVibration = 24;
+
+        for (let i = 0; i < escherModules.length; i++) {
+          const mod = escherModules[i];
+          mod.targetOffsetZ += mod.dir * (Math.PI / 2);
+        }
+      }
+
+      for (let i = 0; i < animatedGates.length; i++) {
+        if (Math.random() < 0.75) {
+          animatedGates[i].targetOpen = animatedGates[i].targetOpen > 0.5 ? 0 : 1;
+          animatedGates[i].nextToggle = 2.2 + Math.random() * 5.0;
+        }
+      }
+    };
+
+    biwaShiftBtn.addEventListener('click', () => triggerBiwaShift(true));
+
+    window.addEventListener('wheel', (e) => {
+      if (!preloaderOpened) return;
+      if (canPanelScroll(e.target, e.deltaY)) return;
+      const clampedDelta = Math.max(-110, Math.min(110, e.deltaY));
+      targetScroll += clampedDelta * 1.15;
+    }, { passive: true });
+
+    let touchStartY = 0;
+    let touchTarget = null;
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+        touchTarget = e.target;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!preloaderOpened || e.touches.length === 0) return;
+      const touchY = e.touches[0].clientY;
+      const delta = touchStartY - touchY;
+      touchStartY = touchY;
+      if (canPanelScroll(touchTarget, delta)) return;
+      targetScroll += delta * 2.15;
+    }, { passive: true });
+
+    window.addEventListener('keydown', (e) => {
+      if (!preloaderOpened) return;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') targetScroll += 340;
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') targetScroll -= 340;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        triggerBiwaShift(false);
+      }
+    });
+
+    window.warpToSection = function (index) {
+      const normalizedCurrent = ((targetScroll % LOOP_HEIGHT) + LOOP_HEIGHT) % LOOP_HEIGHT;
+      const desired = index * SECTION_STEP;
+      let diff = desired - normalizedCurrent;
+
+      if (diff > LOOP_HEIGHT / 2) diff -= LOOP_HEIGHT;
+      if (diff < -LOOP_HEIGHT / 2) diff += LOOP_HEIGHT;
+
+      targetScroll += diff;
+      triggerBiwaShift(false);
+    };
+
+    let mouseX = 0;
+    let mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      resizeCursorCanvas();
+    });
+
+    // ==========================================
+    // 7. MAIN ANIMATION LOOP
+    // ==========================================
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      const elapsed = clock.getElapsedTime();
+
+      renderCursorTrail(elapsed);
+
+      const prevScroll = currentScroll;
+      currentScroll += (targetScroll - currentScroll) * (prefersReducedMotion ? 0.16 : 0.085);
+      scrollVelocity = currentScroll - prevScroll;
+
+      currentCameraRoll += (targetCameraRoll - currentCameraRoll) * Math.min(1, dt * 5.2);
+      currentShaftTwist += (targetShaftTwist - currentShaftTwist) * Math.min(1, dt * 4.4);
+      castleRoot.rotation.y = currentShaftTwist;
+
+      const depthMeters = Math.round(currentScroll * 0.38);
+      const sign = depthMeters >= 0 ? '-' : '+';
+      depthMeter.textContent = `DEPTH: ${sign}${Math.abs(depthMeters).toLocaleString()}m`;
+
+      biwaShake *= 0.87;
+      panelShiftKick *= 0.88;
+      const shakeX = prefersReducedMotion ? 0 : (Math.random() - 0.5) * biwaShake * 1.15;
+      const shakeY = prefersReducedMotion ? 0 : (Math.random() - 0.5) * biwaShake * 1.15;
+
+      const cosR = Math.cos(-currentCameraRoll);
+      const sinR = Math.sin(-currentCameraRoll);
+      const rotMouseX = prefersReducedMotion ? 0 : (mouseX * cosR - mouseY * sinR);
+      const rotMouseY = prefersReducedMotion ? 0 : (mouseX * sinR + mouseY * cosR);
+
+      const camY = -currentScroll * 0.04;
+      camera.position.set(
+        Math.sin(currentScroll * 0.0012) * 1.8 + rotMouseX * 0.9 + shakeX,
+        camY + shakeY,
+        Math.cos(currentScroll * 0.0012) * 1.8
+      );
+
+      camera.lookAt(rotMouseX * 2.4, camY - 19 - rotMouseY * 2.2, 0);
+      if (!prefersReducedMotion) {
+        camera.rotateZ(currentCameraRoll + currentScroll * 0.00042 + scrollVelocity * 0.0008 + shakeX * 0.035);
+      }
+
+      coreLight.position.set(0, camY - 9, 0);
+      upperLight.position.set(0, camY + 8, 0);
+      abyssLight.position.set(0, camY - 38, 0);
+
+      for (let i = 0; i < NUM_CHUNKS; i++) {
+        const chunk = chunks[i];
+        let relY = ((chunk.baseY - camY) % TOTAL_SPAN + TOTAL_SPAN) % TOTAL_SPAN;
+        if (relY > TOTAL_SPAN * 0.25) relY -= TOTAL_SPAN;
+        chunk.mesh.position.y = camY + relY;
+      }
+
+      distantLamps.position.y = Math.floor(camY / TOTAL_SPAN) * TOTAL_SPAN;
+      if (!prefersReducedMotion) distantLamps.rotation.y = elapsed * 0.035;
+
+      for (let i = 0; i < escherModules.length; i++) {
+        const mod = escherModules[i];
+        mod.currentOffsetZ += (mod.targetOffsetZ - mod.currentOffsetZ) * Math.min(1, dt * 6.2);
+        const sway = prefersReducedMotion ? 0 : Math.sin(elapsed * 0.65 + i) * 0.04;
+        mod.mesh.rotation.z = mod.baseZ + mod.currentOffsetZ + sway;
+      }
+
+      for (let i = 0; i < animatedGates.length; i++) {
+        const g = animatedGates[i];
+        g.nextToggle -= dt;
+        if (g.nextToggle <= 0) {
+          g.targetOpen = g.targetOpen > 0.5 ? 0 : 1;
+          g.nextToggle = 2.5 + Math.random() * 6.5;
+        }
+        g.openProgress += (g.targetOpen - g.openProgress) * Math.min(1, dt * 6.5);
+        const slideOffset = 1.18 + g.openProgress * 2.15;
+        g.leftDoor.position.x = -slideOffset;
+        g.rightDoor.position.x = slideOffset;
+      }
+
+      if (!prefersReducedMotion) {
+        for (let i = 0; i < animatedLanterns.length; i++) {
+          const l = animatedLanterns[i];
+          const flicker = Math.sin(elapsed * l.speed * 2.3 + l.phase) * 0.35 + Math.cos(elapsed * 5.2 + l.phase) * 0.15;
+          const s = l.baseScale + flicker;
+          l.halo.scale.set(s, s, 1);
+          l.group.rotation.z = Math.sin(elapsed * l.speed + l.phase) * 0.06;
+        }
+      }
+
+      const phase = ((currentScroll % LOOP_HEIGHT) + LOOP_HEIGHT) % LOOP_HEIGHT;
+      let closestIdx = 0;
+      let minAbsDiff = Infinity;
+
+      for (let i = 0; i < NUM_SECTIONS; i++) {
+        const sectionPos = i * SECTION_STEP;
+        let diff = phase - sectionPos;
+
+        if (diff > LOOP_HEIGHT / 2) diff -= LOOP_HEIGHT;
+        if (diff < -LOOP_HEIGHT / 2) diff += LOOP_HEIGHT;
+
+        const absDiff = Math.abs(diff);
+        if (absDiff < minAbsDiff) {
+          minAbsDiff = absDiff;
+          closestIdx = i;
+        }
+
+        const visibilityRange = SECTION_STEP * 0.48;
+        const panel = panels[i];
+
+        if (absDiff < visibilityRange) {
+          const norm = diff / visibilityRange;
+          const opacity = Math.max(0, 1 - Math.pow(Math.abs(norm), 2.15));
+          const translateY = -norm * (isMobile ? 190 : 260);
+          const scale = (1 - Math.abs(norm) * 0.13) - panelShiftKick * 0.04;
+          const rotateX = prefersReducedMotion ? 0 : norm * 9;
+          const rotateY = prefersReducedMotion ? 0 : panelShiftKick * 5;
+
+          panel.style.opacity = opacity.toFixed(3);
+          panel.style.transform = `translate3d(-50%, calc(-50% + ${translateY.toFixed(1)}px), 0) scale(${scale.toFixed(3)}) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+          panel.style.pointerEvents = opacity > 0.4 ? 'auto' : 'none';
+        } else {
+          panel.style.opacity = '0';
+          panel.style.pointerEvents = 'none';
+        }
+      }
+
+      if (closestIdx !== activeSectionIndex) {
+        activeSectionIndex = closestIdx;
+        navItems.forEach((btn, idx) => {
+          btn.classList.toggle('active', idx === activeSectionIndex);
+        });
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+
+  <script>
+    (() => {
+      const audio = document.getElementById("castleAudio");
+      const player = document.getElementById("castlePlayer");
+      const btn = document.getElementById("castleToggleBtn");
+      const status = document.getElementById("castleStatus");
+
+      if (!audio || !player || !btn || !status) return;
+
+      // Ensure continuous looping
+      audio.loop = true;
+
+      function syncUI(isPlaying) {
+        player.classList.toggle("playing", isPlaying);
+        btn.textContent = isPlaying ? "❚❚" : "▶";
+        status.textContent = isPlaying ? "Loop • Playing" : "Loop • Paused";
+      }
+
+      btn.addEventListener("click", async () => {
+        if (audio.paused) {
+          try {
+            await audio.play();
+            syncUI(true);
+          } catch (err) {
+            status.textContent = "Missing infinity-castle-theme.mp3";
+          }
+        } else {
+          audio.pause();
+          syncUI(false);
+        }
+      });
+
+      audio.addEventListener("play", () => syncUI(true));
+      audio.addEventListener("pause", () => syncUI(false));
+      audio.addEventListener("error", () => {
+        syncUI(false);
+        status.textContent = "Add infinity-castle-theme.mp3";
+      });
+    })();
+  </script>
 </body>
 </html>
