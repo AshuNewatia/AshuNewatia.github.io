@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Ashu Newatia | Infinity Castle Portfolio</title>
-  <meta name="description" content="Interactive 3D Infinity Castle (Mugenjo) portfolio of Ashu Newatia — Computer Science Undergrad at IIT Indore, Full-Stack & Systems Developer." />
+  <title>Ashu Newatia | Portfolio</title>
+  <meta name="description" content="Interactive portfolio of Ashu Newatia — Computer Science Undergrad at IIT Indore, Full-Stack & Systems Developer." />
   <meta name="theme-color" content="#080404" />
 
   <!-- OpenGraph / Social Link Previews -->
-  <meta property="og:title" content="Ashu Newatia | Infinity Castle Portfolio" />
+  <meta property="og:title" content="Ashu Newatia | Portfolio" />
   <meta property="og:description" content="Travel through the gates of a shifting 3D castle to explore full-stack systems, low-latency AI voice agents, and algorithmic engines." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -16,7 +16,7 @@
   <meta name="twitter:description" content="Interactive 3D Infinity Castle portfolio — Full-Stack & Systems Developer @ IIT Indore." />
 
   <!-- Inline SVG Crimson Hanko Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23080404'/%3E%3Crect x='5' y='5' width='54' height='54' rx='5' fill='%233d080c' stroke='%23c21d24' stroke-width='4'/%3E%3Crect x='11' y='11' width='42' height='42' rx='2' fill='none' stroke='%23ffaa44' stroke-width='1.5' stroke-opacity='0.65'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-weight='bold' font-size='25' fill='%23ffd584' text-anchor='middle' letter-spacing='1'%3EAN%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="image.jpeg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -653,6 +653,20 @@
       margin-bottom: 1rem;
     }
 
+    .monogram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.monogram-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 50%; /* use 4px or 6px if you prefer a square badge instead of a circle */
+  flex-shrink: 0;
+}
+
     .hero-desc {
       font-size: clamp(0.9rem, 1.5vw, 1rem);
       line-height: 1.72;
@@ -1056,6 +1070,44 @@
       flex-shrink: 0;
     }
 
+    .castle-bass-waves {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 20px;
+      padding: 2px 4px;
+    }
+
+    .castle-bass-waves span {
+      width: 4px;
+      height: 3px;
+      border-radius: 0; /* sharp rectangular wave blocks */
+      background: linear-gradient(180deg, var(--amber-bright) 0%, var(--amber) 58%, var(--crimson) 100%);
+      box-shadow: 0 0 8px rgba(255, 170, 68, 0.35);
+      transform-origin: bottom;
+      transition: height 55ms linear, opacity 0.2s ease, box-shadow 80ms linear;
+      opacity: 0.45;
+    }
+
+    .castle-player.playing .castle-bass-waves span {
+      opacity: 1;
+    }
+
+    .castle-player.bass-hit .castle-bass-waves span {
+      box-shadow: 0 0 12px rgba(255, 170, 68, 0.75), 0 0 18px rgba(194, 29, 36, 0.45);
+    }
+
+    @media (max-width: 520px) {
+      .castle-bass-waves { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .castle-bass-waves span {
+        height: 6px !important;
+        transition: none;
+      }
+    }
+
     .castle-toggle-btn:hover {
       transform: scale(1.06);
       border-color: var(--amber-bright);
@@ -1158,6 +1210,195 @@
       .btn-primary, .btn-ghost, .project-link { min-height: 44px; }
     }
 
+    /* ==========================================
+       ELEVATED SHOJI PANELS, EMA PLAQUES & CARDS
+       ========================================== */
+    .shoji-panel {
+      background:
+        radial-gradient(ellipse 85% 45% at 50% 0%, rgba(255, 182, 82, 0.16), transparent 65%),
+        radial-gradient(circle at 12% 100%, rgba(194, 29, 36, 0.13), transparent 52%),
+        linear-gradient(155deg, rgba(38, 18, 11, 0.92), rgba(14, 7, 5, 0.95)),
+        repeating-linear-gradient(90deg, rgba(255, 170, 68, 0.04) 0px, rgba(255, 170, 68, 0.04) 1px, transparent 1px, transparent 54px),
+        repeating-linear-gradient(0deg, rgba(255, 170, 68, 0.04) 0px, rgba(255, 170, 68, 0.04) 1px, transparent 1px, transparent 54px);
+      border: 1px solid rgba(255, 178, 82, 0.48);
+      box-shadow:
+        0 32px 85px rgba(0, 0, 0, 0.94),
+        0 0 54px rgba(255, 154, 46, 0.16),
+        0 0 26px rgba(194, 29, 36, 0.14),
+        inset 0 1px 0 rgba(255, 224, 156, 0.28),
+        inset 0 0 56px rgba(255, 160, 56, 0.08);
+    }
+
+    .shoji-panel[data-reading="true"] {
+      background:
+        radial-gradient(ellipse 80% 35% at 50% 0%, rgba(255, 190, 96, 0.14), transparent 60%),
+        linear-gradient(160deg, rgba(26, 13, 8, 0.98), rgba(10, 5, 4, 0.99));
+      border-color: var(--amber-bright);
+      box-shadow:
+        0 34px 90px rgba(0, 0, 0, 0.97),
+        0 0 38px rgba(255, 170, 68, 0.26);
+    }
+
+    .shoji-panel::before,
+    .shoji-panel::after {
+      width: 28px;
+      height: 28px;
+      border-color: var(--amber-bright);
+      filter: drop-shadow(0 0 9px rgba(255, 170, 68, 0.55));
+    }
+
+    /* Wooden Ema Plaques (Who Am I, Skills, Achievements) */
+    .ema-plaque {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(62, 28, 13, 0.92) 0%, rgba(28, 13, 7, 0.96) 55%, rgba(16, 7, 4, 0.98) 100%);
+      border: 1px solid rgba(255, 176, 78, 0.36);
+      border-top: 2px solid var(--amber-bright);
+      padding: 1.05rem 1.15rem;
+      border-radius: 5px;
+      box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 226, 162, 0.2),
+        inset 0 -10px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .ema-plaque:hover {
+      transform: translateY(-4px);
+      border-color: var(--amber-bright);
+      box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.68),
+        0 0 24px rgba(255, 168, 62, 0.28),
+        inset 0 1px 0 rgba(255, 235, 185, 0.32);
+    }
+
+    .ema-title {
+      color: var(--amber-bright);
+      text-shadow: 0 0 12px rgba(255, 170, 68, 0.22);
+      margin-bottom: 0.65rem;
+    }
+
+    .ema-tag {
+      background: linear-gradient(180deg, rgba(24, 11, 7, 0.92), rgba(10, 5, 4, 0.96));
+      border: 1px solid rgba(255, 186, 94, 0.3);
+      color: var(--parchment);
+      box-shadow: inset 0 1px 0 rgba(255, 220, 150, 0.08);
+      transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .ema-plaque:hover .ema-tag {
+      border-color: rgba(255, 195, 115, 0.48);
+    }
+
+    .ema-tag:hover {
+      border-color: var(--amber-bright);
+      color: var(--amber-bright);
+      box-shadow: 0 0 10px rgba(255, 170, 68, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Project Cards (.lantern-card) */
+    .lantern-card {
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255, 170, 68, 0.12), transparent 55%),
+        linear-gradient(155deg, rgba(44, 21, 11, 0.92), rgba(18, 8, 5, 0.96));
+      border: 1px solid rgba(255, 176, 78, 0.36);
+      padding: 1.25rem 1.3rem;
+      border-radius: 6px;
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 222, 154, 0.16);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+    }
+
+    .lantern-card::before {
+      top: -40px;
+      right: -40px;
+      width: 145px;
+      height: 145px;
+      background: radial-gradient(circle, rgba(255, 182, 78, 0.28), transparent 72%);
+      opacity: 0.55;
+    }
+
+    .lantern-card::after {
+      height: 2.5px;
+      background: linear-gradient(90deg, var(--crimson), var(--amber-bright) 55%, var(--crimson));
+      opacity: 0.85;
+    }
+
+    .lantern-card:hover {
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255, 186, 84, 0.2), transparent 58%),
+        linear-gradient(155deg, rgba(62, 29, 14, 0.96), rgba(24, 11, 6, 0.98));
+      border-color: var(--amber-bright);
+      box-shadow:
+        0 18px 38px rgba(0, 0, 0, 0.75),
+        0 0 32px rgba(255, 168, 62, 0.28),
+        0 0 18px rgba(194, 29, 36, 0.2),
+        inset 0 1px 0 rgba(255, 236, 188, 0.28);
+      transform: translateY(-4px);
+    }
+
+    .lantern-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-num {
+      color: #ff5a60;
+      text-shadow: 0 0 10px rgba(230, 57, 64, 0.35);
+    }
+
+    .project-footer {
+      border-top: 1px solid rgba(255, 176, 78, 0.22);
+    }
+
+    /* Contact Gate Cards (.gate-link) */
+    .gate-link {
+      background:
+        radial-gradient(circle at 0% 50%, rgba(194, 29, 36, 0.16), transparent 65%),
+        linear-gradient(155deg, rgba(46, 21, 11, 0.92), rgba(16, 8, 5, 0.96));
+      border: 1px solid rgba(255, 176, 78, 0.36);
+      border-left: 3px solid var(--crimson);
+      box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 220, 150, 0.14);
+    }
+
+    .gate-link:hover {
+      border-color: var(--amber-bright);
+      border-left-color: var(--amber-bright);
+      background:
+        radial-gradient(circle at 0% 50%, rgba(255, 170, 68, 0.18), transparent 65%),
+        linear-gradient(155deg, rgba(64, 29, 14, 0.96), rgba(22, 10, 6, 0.98));
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.7),
+        0 0 26px rgba(255, 168, 62, 0.26),
+        inset 0 1px 0 rgba(255, 235, 185, 0.26);
+      transform: translateY(-3px);
+    }
+
+    body.cards-hidden #panels-stage {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+    }
+
+    #panels-stage {
+      transition: opacity 0.28s ease, visibility 0s linear 0s;
+    }
+
+    #cards-toggle-btn.cards-off {
+      border-color: var(--amber);
+      color: var(--amber-bright);
+      background: rgba(58, 26, 10, 0.92);
+      box-shadow: 0 0 18px var(--amber-glow);
+    }
+
+    @media (max-width: 520px) {
+      #cards-toggle-label { display: none; }
+    }
+
     @media (max-width: 760px), (max-height: 540px) {
       .monogram-text, #gravity-meter, #depth-meter { display: none; }
       .hud-pill { padding: 0.38rem 0.72rem; }
@@ -1228,10 +1469,9 @@
   <!-- Minimal HUD -->
   <header class="hud-top">
     <button type="button" class="monogram" onclick="warpToSection(0)" title="Return to Entrance">
-      <span class="hanko-seal">AN</span>
+      <img src="image.jpeg" alt="Ashu Newatia" class="monogram-icon" />
       <span class="monogram-text">
         <span class="monogram-title">Ashu Newatia</span>
-        <span class="monogram-sub">MUGENJO // INFINITY CASTLE</span>
       </span>
     </button>
 
@@ -1257,42 +1497,54 @@
         <span id="audio-icon">🔇</span>
         <span id="audio-label">SOUND: OFF</span>
       </button>
+      <button class="hud-pill hud-btn" id="cards-toggle-btn" type="button" aria-pressed="false" title="Hide or show all cards to view the 3D castle background">
+        <span id="cards-toggle-icon">🏯</span>
+        <span id="cards-toggle-label">CARDS: ON</span>
+      </button>
     </div>
   </header>
 
   <!-- Chamber Navigation (Right Edge on Desktop, Bottom Dock on Mobile) -->
-  <nav class="chamber-nav" aria-label="Castle Levels">
-    <button type="button" class="nav-item active" data-index="0" onclick="warpToSection(0)" aria-label="Level 01 Entrance">
-      <span class="nav-text">01 Entrance</span>
+  <nav class="chamber-nav" aria-label="Page Sections">
+    <button type="button" class="nav-item active" data-index="0" onclick="warpToSection(0)" aria-label="1 Hero Page">
+      <span class="nav-text">01 Hero</span>
       <span class="nav-diamond"></span>
     </button>
-    <button type="button" class="nav-item" data-index="1" onclick="warpToSection(1)" aria-label="Level 02 Chambers">
-      <span class="nav-text">02 Chambers</span>
+    <button type="button" class="nav-item" data-index="1" onclick="warpToSection(1)" aria-label="2 Who Am I">
+      <span class="nav-text">02 Who Am I</span>
       <span class="nav-diamond"></span>
     </button>
-    <button type="button" class="nav-item" data-index="2" onclick="warpToSection(2)" aria-label="Level 03 Forged Works">
-      <span class="nav-text">03 Forged Works</span>
+    <button type="button" class="nav-item" data-index="2" onclick="warpToSection(2)" aria-label="3 Skills and Expertise">
+      <span class="nav-text">03 Skills</span>
       <span class="nav-diamond"></span>
     </button>
-    <button type="button" class="nav-item" data-index="3" onclick="warpToSection(3)" aria-label="Level 04 Abyssal Gate">
-      <span class="nav-text">04 Abyssal Gate</span>
+    <button type="button" class="nav-item" data-index="3" onclick="warpToSection(3)" aria-label="4 Projects">
+      <span class="nav-text">04 Projects</span>
+      <span class="nav-diamond"></span>
+    </button>
+    <button type="button" class="nav-item" data-index="4" onclick="warpToSection(4)" aria-label="5 Achievements">
+      <span class="nav-text">05 Achievements</span>
+      <span class="nav-diamond"></span>
+    </button>
+    <button type="button" class="nav-item" data-index="5" onclick="warpToSection(5)" aria-label="6 Contact — Let's Build Something">
+      <span class="nav-text">06 Contact</span>
       <span class="nav-diamond"></span>
     </button>
   </nav>
 
   <!-- Floating Ornate Shoji Panels -->
   <main id="panels-stage">
-    <!-- LEVEL 01: ENTRANCE -->
+    <!-- 1) HERO PAGE -->
     <section class="shoji-panel" id="panel-0">
       <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(0, this)">Pin card</button>
-      <div class="level-tag">Level 01 // The Entrance</div>
+      <div class="level-tag">01 // Hero Page</div>
       <h1 class="hero-title">Ashu Newatia</h1>
-      <p class="hero-subtitle">Computer Science Undergrad @ IIT Indore | Full-Stack &amp; Systems Developer</p>
+      <p class="hero-subtitle">Computer Science Student @ IIT Indore | Frontend Developer @ CAMC</p>
       <p class="hero-desc">
-        Engineering real-time web systems, low-latency AI voice agents, and high-throughput algorithmic engines. Follow shifting gates through the lantern-lit castle to explore my projects and the tools I build with.
+        Hi, I'm Ashu—a B.Tech CSE student at IIT Indore (9.04 CPI) who likes building fast web apps, real-time AI voice tools, and clean database systems. Scroll through to see what I've worked on and what I can build next.
       </p>
       <div class="hero-actions">
-        <button class="btn-primary" type="button" onclick="warpToSection(2)">Explore Forged Works</button>
+        <button class="btn-primary" type="button" onclick="warpToSection(3)">See My Projects</button>
         <a class="btn-ghost" href="./resume.pdf" target="_blank" rel="noopener">Resume PDF ↗</a>
         <button class="btn-ghost" type="button" onclick="triggerBiwaShift(true)">Pluck Biwa [Space]</button>
         <div class="scroll-cue">
@@ -1303,178 +1555,244 @@
       </div>
     </section>
 
-    <!-- LEVEL 02: THE CHAMBERS -->
+    <!-- 2) WHO AM I -->
     <section class="shoji-panel" id="panel-1">
       <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(1, this)">Pin card</button>
-      <div class="level-tag">Level 02 // The Chambers</div>
-      <h2 class="section-heading">Architecture &amp; Arsenal</h2>
+      <div class="level-tag">02 // Who Am I</div>
+      <h2 class="section-heading">Who Am I</h2>
       <p class="about-bio">
-        Second-year B.Tech Computer Science &amp; Engineering student at <strong>IIT Indore (9.04 CPI)</strong>. Frontend Developer for IIT Indore’s <strong>Career Advancement and Mentoring Centre (CAMC)</strong>, active builder with <strong>The Programming Club</strong> and <strong>GDG IIT Indore</strong>, and competitive programmer (<strong>Codeforces Rating: 1630</strong> | <strong>SRMC Stage 2 AIR 76</strong>).
+        I am a second-year Computer Science and Engineering undergraduate at <strong>IIT Indore</strong> (Roll No. 250001011, <strong>9.04 CPI</strong>). Along with my coursework, I work as a <strong>Frontend Developer</strong> for IIT Indore's <strong>Career Advancement and Mentoring Centre (CAMC)</strong>, keeping the portal's frontend and user-facing features running smoothly and improving them over time.
       </p>
+      <div class="ema-grid">
+        <div class="ema-plaque">
+          <div class="ema-title">B.Tech CSE · 2025–Present</div>
+          <div class="ema-tags">
+            <span class="ema-tag">IIT Indore</span>
+            <span class="ema-tag">9.04 CPI</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Class 12 · 2025</div>
+          <div class="ema-tags">
+            <span class="ema-tag">CBSE Board</span>
+            <span class="ema-tag">94.4%</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Class 10 · 2023</div>
+          <div class="ema-tags">
+            <span class="ema-tag">CBSE Board</span>
+            <span class="ema-tag">97.2%</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Campus Roles</div>
+          <div class="ema-tags">
+            <span class="ema-tag">CAMC Frontend Dev</span>
+            <span class="ema-tag">GDG Domain Lead</span>
+            <span class="ema-tag">The Programming Club</span>
+            <span class="ema-tag">The Math Club</span>
+            <span class="ema-tag">The Quiz Club</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) SKILLS AND EXPERTISE -->
+    <section class="shoji-panel" id="panel-2">
+      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(2, this)">Pin card</button>
+      <div class="level-tag">03 // Skills and Expertise</div>
+      <h2 class="section-heading">Skills and Expertise</h2>
       <div class="ema-grid">
         <div class="ema-plaque">
           <div class="ema-title">Languages</div>
           <div class="ema-tags">
-            <span class="ema-tag">C++17</span>
-            <span class="ema-tag">TypeScript</span>
+            <span class="ema-tag">C++</span>
             <span class="ema-tag">JavaScript</span>
             <span class="ema-tag">SQL</span>
+            <span class="ema-tag">HTML5</span>
+            <span class="ema-tag">CSS3</span>
           </div>
         </div>
         <div class="ema-plaque">
-          <div class="ema-title">Frontend &amp; 3D</div>
+          <div class="ema-title">Frontend</div>
           <div class="ema-tags">
             <span class="ema-tag">React.js</span>
             <span class="ema-tag">Next.js</span>
             <span class="ema-tag">Tailwind CSS</span>
             <span class="ema-tag">Three.js</span>
-            <span class="ema-tag">HTML5/CSS3</span>
           </div>
         </div>
         <div class="ema-plaque">
-          <div class="ema-title">Backend &amp; Real-Time</div>
+          <div class="ema-title">Backend &amp; Databases</div>
           <div class="ema-tags">
             <span class="ema-tag">Node.js</span>
             <span class="ema-tag">Express.js</span>
+            <span class="ema-tag">PostgreSQL</span>
+            <span class="ema-tag">MongoDB</span>
+            <span class="ema-tag">MySQL</span>
             <span class="ema-tag">Socket.IO</span>
-            <span class="ema-tag">LiveKit WebRTC</span>
           </div>
         </div>
         <div class="ema-plaque">
-          <div class="ema-title">Databases &amp; Tools</div>
+          <div class="ema-title">AI &amp; Tools</div>
           <div class="ema-tags">
-            <span class="ema-tag">PostgreSQL</span>
-            <span class="ema-tag">MySQL</span>
-            <span class="ema-tag">MongoDB</span>
-            <span class="ema-tag">Git/GitHub</span>
-            <span class="ema-tag">Linux</span>
+            <span class="ema-tag">Google Gemma</span>
+            <span class="ema-tag">WebRTC</span>
+            <span class="ema-tag">LiveKit</span>
+            <span class="ema-tag">Git</span>
+            <span class="ema-tag">GitHub</span>
+            <span class="ema-tag">LaTeX</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Key Courses</div>
+          <div class="ema-tags">
+            <span class="ema-tag">Linear Algebra</span>
+            <span class="ema-tag">Basic Calculus</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- LEVEL 03: FORGED WORKS -->
-    <section class="shoji-panel" id="panel-2">
-      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(2, this)">Pin card</button>
-      <div class="level-tag">Level 03 // Forged Works</div>
-      <h2 class="section-heading">Selected Systems &amp; Builds</h2>
+    <!-- 4) PROJECTS -->
+    <section class="shoji-panel" id="panel-3">
+      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(3, this)">Pin card</button>
+      <div class="level-tag">04 // Projects</div>
+      <h2 class="section-heading">Projects</h2>
       <div class="projects-grid">
         <article class="lantern-card">
           <div>
-            <div class="project-num">CHAMBER I // REAL-TIME AI</div>
-            <h3 class="project-title">Live Voice Agent</h3>
+            <div class="project-num">OCT 2026–PRESENT // VOICE AI</div>
+            <h3 class="project-title">Mission Impossible Spy Terminal: AI Voice Agent</h3>
             <p class="project-desc">
-              Real-time tactical AI voice assistant engineered for sub-second conversational latency using WebRTC audio streaming and neural speech pipelines.
+              A spy-themed real-time voice agent using WebRTC and LiveKit for low-latency two-way audio, paired with Deepgram for speech-to-text, Google Gemma for responses, Cartesia TTS for voice output, memory context, and role guardrails.
             </p>
           </div>
           <div class="project-footer">
             <div class="ema-tags">
-              <span class="ema-tag">TypeScript</span>
-              <span class="ema-tag">LiveKit WebRTC</span>
-              <span class="ema-tag">Deepgram Nova-3</span>
-              <span class="ema-tag">Gemma-4</span>
+              <span class="ema-tag">WebRTC</span>
+              <span class="ema-tag">LiveKit</span>
+              <span class="ema-tag">Deepgram</span>
+              <span class="ema-tag">Google Gemma</span>
               <span class="ema-tag">Cartesia TTS</span>
             </div>
             <div class="project-links">
-              <a class="project-link" href="https://github.com/AshuNewatia/Live-Voice-Agent" target="_blank" rel="noopener">View Repo ↗</a>
+              <a class="project-link" href="https://github.com/AshuNewatia" target="_blank" rel="noopener">GitHub ↗</a>
             </div>
           </div>
         </article>
 
         <article class="lantern-card">
           <div>
-            <div class="project-num">CHAMBER II // IITISOC'26 — 3RD PLACE</div>
-            <h3 class="project-title">CampusFlow</h3>
+            <div class="project-num">JUN 2026–AUG 2026 // TEAM WORKSPACE</div>
+            <h3 class="project-title">Campus Flow: Real-Time Collaborative Workspace</h3>
             <p class="project-desc">
-              Real-time collaborative project workspace with bidirectional GitHub sync, live task boards, and automated PDF reporting with active student teams.
+              A team workspace with GitHub syncing via Octokit, webhooks, and atomic upserts; live Kanban boards powered by Socket.IO rooms, optimistic UI, JWT auth, and three-tier access control; plus PDF and CSV report exports.
             </p>
           </div>
           <div class="project-footer">
             <div class="ema-tags">
-              <span class="ema-tag">MongoDB</span>
-              <span class="ema-tag">Express</span>
-              <span class="ema-tag">React</span>
+              <span class="ema-tag">React.js</span>
               <span class="ema-tag">Node.js</span>
+              <span class="ema-tag">Express.js</span>
+              <span class="ema-tag">MongoDB</span>
               <span class="ema-tag">Socket.IO</span>
               <span class="ema-tag">Octokit</span>
+              <span class="ema-tag">JWT</span>
+              <span class="ema-tag">PDFKit</span>
             </div>
             <div class="project-links">
-              <a class="project-link" href="https://github.com/AshuNewatia/SoC" target="_blank" rel="noopener">View Repo ↗</a>
-              <a class="project-link" href="https://github.com/AshuNewatia/SoC#readme" target="_blank" rel="noopener">Live Demo ↗</a>
+              <a class="project-link" href="https://github.com/AshuNewatia" target="_blank" rel="noopener">GitHub ↗</a>
             </div>
           </div>
         </article>
 
         <article class="lantern-card">
           <div>
-            <div class="project-num">CHAMBER III // CAMPUS TRANSIT</div>
-            <h3 class="project-title">Instibus (Campus Express)</h3>
+            <div class="project-num">OCT 2026 // DATABASE &amp; BACKEND</div>
+            <h3 class="project-title">Institute Transit Database System</h3>
             <p class="project-desc">
-              Full-stack institute bus scheduling and real-time seat booking platform architected for campus transit logistics and relational data integrity.
+              A structured database and backend system for campus routes, trip requests, seat bookings, and schedule checks built with clean relational schema design.
             </p>
           </div>
           <div class="project-footer">
             <div class="ema-tags">
-              <span class="ema-tag">Next.js</span>
-              <span class="ema-tag">React</span>
-              <span class="ema-tag">Node.js</span>
               <span class="ema-tag">PostgreSQL</span>
-              <span class="ema-tag">MySQL</span>
+              <span class="ema-tag">Express.js</span>
+              <span class="ema-tag">Node.js</span>
+              <span class="ema-tag">ER Modelling</span>
             </div>
             <div class="project-links">
-              <a class="project-link" href="https://github.com/AshuNewatia/Instibus" target="_blank" rel="noopener">View Repo ↗</a>
-              <a class="project-link" href="https://github.com/AshuNewatia/Instibus#readme" target="_blank" rel="noopener">Live Demo ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="lantern-card">
-          <div>
-            <div class="project-num">CHAMBER IV // SYSTEMS ARCHITECTURE</div>
-            <h3 class="project-title">Emergency Triage Queue Engine</h3>
-            <p class="project-desc">
-              High-throughput C++17 priority simulation engine implementing linear and step-wise aging policies with formal mathematical latency bounds.
-            </p>
-          </div>
-          <div class="project-footer">
-            <div class="ema-tags">
-              <span class="ema-tag">C++17</span>
-              <span class="ema-tag">Data Structures</span>
-              <span class="ema-tag">Algorithms</span>
-              <span class="ema-tag">Simulation</span>
-            </div>
-            <div class="project-links">
-              <a class="project-link" href="https://github.com/AshuNewatia/cs253-omnicoders-p10" target="_blank" rel="noopener">View Repo ↗</a>
+              <a class="project-link" href="https://github.com/AshuNewatia" target="_blank" rel="noopener">GitHub ↗</a>
             </div>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- LEVEL 04: THE ABYSSAL GATE -->
-    <section class="shoji-panel" id="panel-3">
-      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(3, this)">Pin card</button>
-      <div class="level-tag">Level 04 // The Abyssal Gate</div>
-      <h2 class="section-heading">Summon &amp; Collaborate</h2>
+    <!-- 5) ACHIEVEMENTS -->
+    <section class="shoji-panel" id="panel-4">
+      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(4, this)">Pin card</button>
+      <div class="level-tag">05 // Achievements</div>
+      <h2 class="section-heading">Achievements &amp; Responsibilities</h2>
+      <div class="ema-grid">
+        <div class="ema-plaque">
+          <div class="ema-title">Competitions &amp; Rankings</div>
+          <div class="ema-tags">
+            <span class="ema-tag">Codeforces Max Rating: 1630 (Expert, 2026)</span>
+            <span class="ema-tag">SRMC Stage 2 · AIR 76 (2026)</span>
+            <span class="ema-tag">Optiver Integral Cup Stage 2 · AIR 220 (2026)</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Olympiads</div>
+          <div class="ema-tags">
+            <span class="ema-tag">IOQM Qualified (2024, 2025)</span>
+            <span class="ema-tag">NSEA Qualified (2024)</span>
+            <span class="ema-tag">NSEP Qualified (2025)</span>
+          </div>
+        </div>
+        <div class="ema-plaque">
+          <div class="ema-title">Club &amp; Community Roles</div>
+          <div class="ema-tags">
+            <span class="ema-tag">Domain Lead, GDG on Campus IIT Indore (Feb 2026–Present)</span>
+            <span class="ema-tag">Volunteer, The Programming Club (Feb 2026–Present)</span>
+            <span class="ema-tag">Volunteer, The Math Club (Jan 2026–Present)</span>
+            <span class="ema-tag">Member, The Quiz Club (Oct 2025–Present)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6) CONTACT — LET'S BUILD SOMETHING -->
+    <section class="shoji-panel" id="panel-5">
+      <button type="button" class="reading-toggle" aria-pressed="false" onclick="toggleReading(5, this)">Pin card</button>
+      <div class="level-tag">06 // Contact</div>
+      <h2 class="section-heading">Let's Build Something</h2>
       <p class="about-bio">
-        Open to software engineering internships, systems architecture discussions, full-stack builds, and competitive programming collaborations.
+        Got an idea, an internship opportunity, a hackathon team, or a project you want to build? Drop a message or connect with me below.
       </p>
       <div class="contact-grid">
         <a class="gate-link" href="mailto:cse250001011@iiti.ac.in">
-          <span class="gate-platform">Direct Mail</span>
+          <span class="gate-platform">College Email</span>
           <span class="gate-handle">cse250001011@iiti.ac.in</span>
+        </a>
+        <a class="gate-link" href="mailto:govind06092007@gmail.com">
+          <span class="gate-platform">Personal Email</span>
+          <span class="gate-handle">govind06092007@gmail.com</span>
+        </a>
+        <a class="gate-link" href="tel:+919316809967">
+          <span class="gate-platform">Phone</span>
+          <span class="gate-handle">+91-9316809967</span>
         </a>
         <a class="gate-link" href="https://github.com/AshuNewatia" target="_blank" rel="noopener">
           <span class="gate-platform">GitHub</span>
           <span class="gate-handle">github.com/AshuNewatia</span>
         </a>
-        <a class="gate-link" href="https://linkedin.com/in/ashunewatia23" target="_blank" rel="noopener">
+        <a class="gate-link" href="https://www.linkedin.com" target="_blank" rel="noopener">
           <span class="gate-platform">LinkedIn</span>
-          <span class="gate-handle">in/ashunewatia23</span>
-        </a>
-        <a class="gate-link" href="https://codeforces.com/profile/Ashu23" target="_blank" rel="noopener">
-          <span class="gate-platform">Codeforces</span>
-          <span class="gate-handle">Ashu23</span>
+          <span class="gate-handle">Ashu Newatia</span>
         </a>
       </div>
       <div class="loop-notice">
@@ -1484,7 +1802,7 @@
     </section>
   </main>
 
-  <!-- Bottom-Right Looping Music Player -->
+ <!-- Bottom-Right Looping Music Player -->
   <aside class="castle-player" id="castlePlayer" aria-label="Infinity Castle Theme Player">
     <button
       type="button"
@@ -1500,14 +1818,18 @@
       <span class="castle-status" id="castleStatus">Loop • Paused</span>
     </div>
 
-    <div class="castle-eq" aria-hidden="true">
+    <div class="castle-bass-waves" id="castleBassWaves" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
       <span></span>
       <span></span>
       <span></span>
     </div>
 
-    <!-- Replace src with ./infinity-castle-theme.mp3 or keep your base64 data URI -->
-    <audio id="castleAudio" src="./infinity-castle-theme.mp3" loop preload="none"></audio>
+    <audio id="castleAudio" src="infinity-castle-theme.mp3" loop preload="none"></audio>
   </aside>
 
   <!-- Paste your existing Three.js, Biwa audio, cursor trail & scroll scripts below -->
@@ -1516,6 +1838,38 @@
 
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // ==========================================
+    // HIDE / SHOW ALL CARDS (BACKGROUND-ONLY VIEW)
+    // ==========================================
+    let cardsHidden = false;
+    const cardsToggleBtn = document.getElementById('cards-toggle-btn');
+    const cardsToggleIcon = document.getElementById('cards-toggle-icon');
+    const cardsToggleLabel = document.getElementById('cards-toggle-label');
+
+    function setCardsHidden(hidden) {
+      cardsHidden = Boolean(hidden);
+      document.body.classList.toggle('cards-hidden', cardsHidden);
+
+      if (cardsToggleBtn) {
+        cardsToggleBtn.classList.toggle('cards-off', cardsHidden);
+        cardsToggleBtn.setAttribute('aria-pressed', String(cardsHidden));
+      }
+      if (cardsToggleIcon) cardsToggleIcon.textContent = cardsHidden ? '👁️' : '🏯';
+      if (cardsToggleLabel) cardsToggleLabel.textContent = cardsHidden ? 'CARDS: OFF' : 'CARDS: ON';
+
+      if (cardsHidden) {
+        releaseReading();
+        panels.forEach((panel) => {
+          if (!panel) return;
+          panel.style.pointerEvents = 'none';
+          panel.inert = true;
+        });
+      }
+    }
+
+    cardsToggleBtn?.addEventListener('click', () => {
+      setCardsHidden(!cardsHidden);
+    });
 
     // ==========================================
     // 1. WEB AUDIO: BIWA + AMBIENT ABYSSAL DRONE
@@ -1930,7 +2284,7 @@ if (typeof originalWarpToSection === 'function') {
     scene.add(castleRoot);
 
     let isMobile = window.innerWidth < 768;
-    const NUM_SECTIONS = 4;
+    const NUM_SECTIONS = 6;
     const SECTION_STEP = 1100;
     const CARD_SPACING = 3 * SECTION_STEP;
     const LOOP_HEIGHT = NUM_SECTIONS * CARD_SPACING;
@@ -2505,11 +2859,13 @@ if (typeof originalWarpToSection === 'function') {
     let activeDoor = null;
 
     const panels = [
-      document.getElementById('panel-0'),
-      document.getElementById('panel-1'),
-      document.getElementById('panel-2'),
-      document.getElementById('panel-3')
-    ];
+  document.getElementById('panel-0'),
+  document.getElementById('panel-1'),
+  document.getElementById('panel-2'),
+  document.getElementById('panel-3'),
+  document.getElementById('panel-4'),
+  document.getElementById('panel-5')
+];
     const navItems = document.querySelectorAll('.nav-item');
     const depthMeter = document.getElementById('depth-meter');
     const gravityMeter = document.getElementById('gravity-meter');
@@ -2825,10 +3181,11 @@ if (typeof originalWarpToSection === 'function') {
         const fade = smooth(distance, 0.32, 0.46);
         const opacity = reading ? Number(reading.index === i) : 1 - fade;
         const offset = prefersReducedMotion || reading ? 0 : -Math.sign(diff) * fade * 14;
-        panel.style.opacity = opacity.toFixed(3);
+        const interactive = !cardsHidden && opacity > 0.4;
+        panel.style.opacity = cardsHidden ? '0' : opacity.toFixed(3);
         panel.style.transform = `translate3d(-50%, calc(-50% + ${offset.toFixed(1)}px), 0)`;
-        panel.style.pointerEvents = opacity > 0.4 ? 'auto' : 'none';
-        panel.inert = opacity <= 0.4;
+        panel.style.pointerEvents = interactive ? 'auto' : 'none';
+        panel.inert = !interactive;
       }
 
       if (closestIdx !== activeSectionIndex) {
@@ -2850,27 +3207,125 @@ if (typeof originalWarpToSection === 'function') {
       const player = document.getElementById("castlePlayer");
       const btn = document.getElementById("castleToggleBtn");
       const status = document.getElementById("castleStatus");
+      const bars = Array.from(document.querySelectorAll("#castleBassWaves span"));
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (!audio || !player || !btn || !status) return;
 
-      // Ensure continuous looping
       audio.loop = true;
+
+      let ctx = null;
+      let analyser = null;
+      let freqData = null;
+      let sourceConnected = false;
+      let analyzerFailed = false;
+      let rafId = null;
+
+      // Center-weighted profile so middle/inner bars react strongest to sub-bass & kick
+      const weights = [0.55, 0.72, 0.88, 1.0, 1.0, 0.88, 0.72, 0.55];
+
+      function setupAnalyser() {
+        if (sourceConnected || analyzerFailed) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) {
+          analyzerFailed = true;
+          return;
+        }
+        try {
+          if (!ctx) ctx = new AudioCtx();
+          if (ctx.state === "suspended") ctx.resume().catch(() => {});
+          analyser = ctx.createAnalyser();
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.72;
+          const source = ctx.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(ctx.destination);
+          freqData = new Uint8Array(analyser.frequencyBinCount);
+          sourceConnected = true;
+        } catch {
+          analyzerFailed = true;
+        }
+      }
+
+      function resetBars() {
+        player.classList.remove("bass-hit");
+        bars.forEach((bar) => {
+          bar.style.height = "3px";
+        });
+      }
+
+      function updateBassWaves(now) {
+        if (audio.paused || reduceMotion) {
+          resetBars();
+          rafId = null;
+          return;
+        }
+
+        let bassEnergy = 0;
+
+        if (sourceConnected && analyser && freqData) {
+          analyser.getByteFrequencyData(freqData);
+          // At 44.1kHz / 256 FFT (~172 Hz per bin), bins 0..4 cover ~0–860 Hz with heavy sub/bass weight
+          const lowBins = [
+            freqData[0] || 0,
+            freqData[1] || 0,
+            freqData[2] || 0,
+            freqData[3] || 0,
+            freqData[4] || 0
+          ];
+          const weightedSum =
+            lowBins[0] * 1.2 +
+            lowBins[1] * 1.15 +
+            lowBins[2] * 1.0 +
+            lowBins[3] * 0.75 +
+            lowBins[4] * 0.5;
+          bassEnergy = Math.min(1, (weightedSum / 4.6) / 220);
+        } else {
+          // Fallback rhythmic bass pulse if Web Audio source cannot be attached
+          const beat = 0.5 + 0.5 * Math.sin((now / 1000) * Math.PI * 2.2);
+          bassEnergy = Math.pow(beat, 2.2) * 0.78;
+        }
+
+        player.classList.toggle("bass-hit", bassEnergy > 0.62);
+
+        const maxHeight = 20;
+        const minHeight = 3;
+
+        bars.forEach((bar, idx) => {
+          const w = weights[idx % weights.length];
+          const ripple = 0.82 + 0.18 * Math.sin((now / 1000) * 14 + idx * 0.85);
+          const level = Math.min(1, bassEnergy * w * ripple * 1.22);
+          const px = Math.round(minHeight + level * (maxHeight - minHeight));
+          bar.style.height = `${px}px`;
+        });
+
+        rafId = requestAnimationFrame(updateBassWaves);
+      }
 
       function syncUI(isPlaying) {
         player.classList.toggle("playing", isPlaying);
         btn.textContent = isPlaying ? "❚❚" : "▶";
         status.textContent = isPlaying ? "Loop • Playing" : "Loop • Paused";
+        if (isPlaying && !reduceMotion && !rafId) {
+          rafId = requestAnimationFrame(updateBassWaves);
+        } else if (!isPlaying) {
+          resetBars();
+        }
       }
 
-      btn.addEventListener('click', async () => {
+      btn.addEventListener("click", async () => {
         if (!audio.paused) {
           audio.pause();
           return;
         }
+        setupAnalyser();
+        if (ctx && ctx.state === "suspended") {
+          await ctx.resume().catch(() => {});
+        }
         try {
           await audio.play();
         } catch {
-          status.textContent = 'Playback interrupted • Press play to retry';
+          status.textContent = "Playback interrupted • Press play to retry";
         }
       });
 
